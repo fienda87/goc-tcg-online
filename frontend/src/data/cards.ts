@@ -7,7 +7,7 @@
 export interface CardData {
   id: string;
   name: string;
-  element: 'Ambis' | 'Santuy' | 'Bucin';
+  element: 'Ambis' | 'Santuy' | 'Bucin' | 'Event' | 'Item';
   rarity: 'Common' | 'Rare' | 'Super Rare' | 'Ultra Rare' | 'Exclusive Legendary';
   rarityLabel: string; // IPK label
   hp: number;
@@ -83,12 +83,30 @@ const IRSWANDA_CARDS: CardData[] = [
   { id: 'irswanda-semsakhir', name: 'Preman Exp', element: 'Ambis', rarity: 'Rare', rarityLabel: 'IPK 2.5', hp: 85, skill_name: 'Exp Grinding', skill_effect: 'ATK +20. Hype mode aktif.', weakness: 'Santuy', lore: 'Dari preman jadi the exp. Level up is real.', image_url: '/images/character/irswanda/semsAkhir/preman exp.webp' },
 ];
 
+// ─── EVENTS ───
+const EVENT_CARDS: CardData[] = [
+  { id: 'event-makrab', name: 'Makrab', element: 'Event', rarity: 'Common', rarityLabel: 'Event', hp: 0, skill_name: 'Bonding', skill_effect: 'Menambah sinergi seluruh kartu sebesar 10%.', weakness: 'Lelah', lore: 'Malam keakraban, di mana semua orang jadi sok kenal.', image_url: '/images/event/makrab.webp' },
+  { id: 'event-pengkaderan', name: 'Pengkaderan', element: 'Event', rarity: 'Rare', rarityLabel: 'Event', hp: 0, skill_name: 'Mental Baja', skill_effect: 'Menghapus debuff mental dari 1 target.', weakness: 'Dosen', lore: 'Dibentak kating demi mental baja.', image_url: '/images/event/pengkaderan.webp' },
+  { id: 'event-syukwis', name: 'Syukwis', element: 'Event', rarity: 'Super Rare', rarityLabel: 'Event', hp: 0, skill_name: 'Lulus!', skill_effect: 'Meningkatkan semua stat 50%.', weakness: 'Skripsi', lore: 'Akhirnya lulus, selamat jalan kampus.', image_url: '/images/event/syukwis.webp' },
+];
+
+// ─── ITEMS ───
+const ITEM_CARDS: CardData[] = [
+  { id: 'item-gacoan', name: 'Mie Gacoan', element: 'Item', rarity: 'Common', rarityLabel: 'Item', hp: 0, skill_name: 'Pedas Level 5', skill_effect: 'Tambah 15 ATK, Kurangi 5 HP.', weakness: 'Sakit Perut', lore: 'Mie pedas andalan akhir bulan.', image_url: '/images/item/gacoan.webp' },
+  { id: 'item-pawon', name: 'Nasi Pawon', element: 'Item', rarity: 'Common', rarityLabel: 'Item', hp: 0, skill_name: 'Kenyang Maksimal', skill_effect: 'Pulihkan 20 HP.', weakness: 'Ngantuk', lore: 'Nasi bungkus penyelamat anak kos.', image_url: '/images/item/pawon.webp' },
+  { id: 'item-salwa', name: 'Salwa', element: 'Item', rarity: 'Rare', rarityLabel: 'Item', hp: 0, skill_name: 'Cemilan Manis', skill_effect: 'Pulihkan 10 HP tiap giliran selama 3 giliran.', weakness: 'Diabetes', lore: 'Jajanan manis legendaris.', image_url: '/images/item/salwa.webp' },
+  { id: 'item-stek', name: 'Es Teh Kampus', element: 'Item', rarity: 'Common', rarityLabel: 'Item', hp: 0, skill_name: 'Segar Seharian', skill_effect: 'Hapus efek Burnout.', weakness: 'Es Mencair', lore: 'Es teh plastikan yang menemani kelas siang.', image_url: '/images/item/stek.webp' },
+  { id: 'item-udangkeju', name: 'Udang Keju', element: 'Item', rarity: 'Rare', rarityLabel: 'Item', hp: 0, skill_name: 'Keju Lumer', skill_effect: 'Berikan shield 20 poin.', weakness: 'Kolesterol', lore: 'Makanan sultan untuk ukuran mahasiswa.', image_url: '/images/item/udangkeju.webp' },
+];
+
 // ─── COMBINED ───
 export const ALL_CARDS: CardData[] = [
   ...AMBIS_CARDS,
   ...SANTUY_CARDS,
   ...BUCIN_CARDS,
   ...IRSWANDA_CARDS,
+  ...EVENT_CARDS,
+  ...ITEM_CARDS,
 ];
 
 // ─── Rarity pools for gacha ───
@@ -161,4 +179,6 @@ export const ELEMENT_COLORS: Record<string, string> = {
   Ambis: '#fe2f2f',
   Santuy: '#d7b73b',
   Bucin: '#7333f1',
+  Event: '#1b5bff', // Blue for event
+  Item: '#00cc66',  // Green for item
 };

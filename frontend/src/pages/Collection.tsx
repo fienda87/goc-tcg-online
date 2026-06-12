@@ -4,7 +4,7 @@ import { CardDetailModal } from '../components/modals/CardDetailModal';
 import { ALL_CARDS, type CardData, ELEMENT_COLORS, RARITY_COLORS } from '../data/cards';
 import { useCollectionStore } from '../store/collectionStore';
 
-const ELEMENTS = ['Ambis', 'Santuy', 'Bucin'] as const;
+const ELEMENTS = ['Ambis', 'Santuy', 'Bucin', 'Event', 'Item'] as const;
 const RARITIES = ['Common', 'Rare', 'Super Rare', 'Ultra Rare', 'Exclusive Legendary'] as const;
 
 export const Collection: React.FC = () => {
