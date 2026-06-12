@@ -372,7 +372,7 @@ export const StaggeredMenu = ({
       <header className="staggered-menu-header" aria-label="Main navigation header">
         <div className="sm-logo h-0 flex items-center translate-y-3" aria-label="Logo">
           <Link to="/" className="inline-block hover:opacity-80 transition-opacity" style={{ filter: open ? 'brightness(0) invert(1)' : 'none' }}>
-            <img src="/images/logo.png" alt="God of College" className="w-[80px] md:w-[100px] h-auto object-contain" />
+            <img src="/images/logo.webp" alt="God of College" className="w-[80px] md:w-[100px] h-auto object-contain" />
           </Link>
         </div>
         <button

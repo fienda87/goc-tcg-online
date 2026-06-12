@@ -22,7 +22,9 @@ export const Collection: React.FC = () => {
     const uniqueOwned = new Map<string, CardData>();
     ownedCards.forEach((c: CardData) => {
       if (!uniqueOwned.has(c.id)) {
-        uniqueOwned.set(c.id, c);
+        // Find the fresh card data from ALL_CARDS to ensure updated image_url
+        const freshCard = ALL_CARDS.find(card => card.id === c.id);
+        uniqueOwned.set(c.id, freshCard || c);
       }
     });
     return Array.from(uniqueOwned.values());
