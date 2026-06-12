@@ -112,7 +112,7 @@ export const Home: React.FC = () => {
         >
           <div className="absolute inset-0 bg-[#d7b73b] opacity-20 blur-3xl rounded-full" />
           <img 
-            src="/images/booster box.png" 
+            src="/images/booster box.webp" 
             alt="Booster Box" 
             className="w-full h-full object-contain relative z-10 drop-shadow-[0_15px_25px_rgba(0,0,0,0.6)]"
           />

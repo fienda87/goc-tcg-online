@@ -30,7 +30,7 @@ export const FlipCard: React.FC<FlipCardProps> = ({ cardData, isCenter = false, 
       >
         {/* Front (Card Back design) */}
         <div className="absolute inset-0 w-full h-full backface-hidden rounded-[13px] bg-black border-2 border-[var(--color-card-white)] flex items-center justify-center overflow-hidden cursor-pointer" style={{ backfaceVisibility: 'hidden' }}>
-           <img src="/images/back design.png" alt="Card Back" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = ''; e.currentTarget.style.backgroundColor = '#111'; }} />
+           <img src="/images/back design.webp" alt="Card Back" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = ''; e.currentTarget.style.backgroundColor = '#111'; }} />
         </div>
 
         {/* Back (Card Face design) */}
