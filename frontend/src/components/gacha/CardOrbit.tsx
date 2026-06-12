@@ -66,14 +66,14 @@ export const CardOrbit: React.FC<CardOrbitProps> = ({ cards, onAllFlipped }) => 
               <div className="relative flex items-center justify-center">
                 {activeAura?.id === card.id && (
                   <div className="absolute inset-[-40px] pointer-events-none z-0">
-                    <RarityAura stage={activeAura.stage} />
+                    <RarityAura stage={activeAura!.stage} />
                   </div>
                 )}
                 <div className="z-10 relative">
                   <FlipCard 
                     cardData={card} 
                     isCenter={isCenter} 
-                    onFlipped={(stage) => handleCardFlipped(card.id, stage)} 
+                    onFlipped={(stage: any) => handleCardFlipped(card.id, stage, card)} 
                   />
                 </div>
               </div>

@@ -1,8 +1,8 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'danger';
+interface ButtonProps extends HTMLMotionProps<'button'> {
+  variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'primary-light';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
 }
@@ -25,6 +25,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
   return (
     <motion.button
+      ref={ref}
       className={`font-[800] rounded-[38px] py-[12px] px-[32px] text-[14px] md:text-[16px] cursor-pointer flex justify-center items-center border-none ${fullWidth ? 'w-full' : ''} ${className}`}
       style={{
         backgroundColor: bg,

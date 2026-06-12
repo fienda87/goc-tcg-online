@@ -18,3 +18,11 @@ declare module '*ClickSpark' {
   const ClickSpark: any;
   export default ClickSpark;
 }
+declare module '*ShinyText' {
+  const ShinyText: any;
+  export default ShinyText;
+}
+declare module '*ScrollVelocity' {
+  const ScrollVelocity: any;
+  export default ScrollVelocity;
+}
