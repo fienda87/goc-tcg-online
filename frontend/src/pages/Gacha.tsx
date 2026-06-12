@@ -115,7 +115,7 @@ const FlipCard: React.FC<{
             className="absolute inset-0 rounded-[13px] overflow-hidden"
             style={{ backfaceVisibility: 'hidden', boxShadow: '#ffffff 0px 0px 0px 2px inset' }}
           >
-            <img src="/images/back design.png" alt="Card Back" className="w-full h-full object-cover" />
+            <img src="/images/back design.webp" alt="Card Back" className="w-full h-full object-cover" />
             <motion.div
               className="absolute inset-0 bg-white/5"
               animate={{ opacity: [0, 0.1, 0] }}
@@ -197,7 +197,7 @@ const InteractivePack: React.FC<{ onOpen: () => void }> = ({ onOpen }) => {
         style={{ clipPath: 'polygon(0 19.5%, 100% 19.5%, 100% 100%, 0 100%)' }}
       >
         <img 
-          src="/images/booster pack.png" 
+          src="/images/booster pack.webp" 
           alt="Booster Pack Bottom" 
           className="w-full h-full object-contain filter drop-shadow-md pointer-events-none" 
         />
@@ -217,7 +217,7 @@ const InteractivePack: React.FC<{ onOpen: () => void }> = ({ onOpen }) => {
         whileHover={!isTearing ? { scale: 1.02 } : {}}
       >
         <img 
-          src="/images/booster pack.png" 
+          src="/images/booster pack.webp" 
           alt="Booster Pack Top" 
           className="w-full h-full object-contain filter drop-shadow-md" 
         />
