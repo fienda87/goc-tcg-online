@@ -13,7 +13,7 @@ interface GachaState {
 }
 
 export const COOLDOWN_SECONDS = 1800; // 30 minutes
-export const MAX_GACHA = 3;
+export const MAX_GACHA = 2;
 
 export const useEnergyStore = create<GachaState>()(
   persist(

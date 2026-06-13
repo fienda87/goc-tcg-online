@@ -166,11 +166,11 @@ export const RARITY_POOLS = {
 
 // Gacha slot probabilities (5 slots per pack)
 export const SLOT_CONFIG = [
-  { common: 85, rare: 13, superRare: 1.8, ultraRare: 0.2, legendary: 0 },   // Slot 1
-  { common: 85, rare: 13, superRare: 1.8, ultraRare: 0.2, legendary: 0 },   // Slot 2
-  { common: 85, rare: 13, superRare: 1.8, ultraRare: 0.2, legendary: 0 },   // Slot 3
-  { common: 80, rare: 16, superRare: 3.5, ultraRare: 0.5, legendary: 0 },   // Slot 4
-  { common: 60, rare: 30, superRare: 8, ultraRare: 1.5, legendary: 0.5 },   // Slot 5
+  { common: 82, rare: 15, superRare: 2.5, ultraRare: 0.5, legendary: 0 },   // Slot 1
+  { common: 82, rare: 15, superRare: 2.5, ultraRare: 0.5, legendary: 0 },   // Slot 2
+  { common: 82, rare: 15, superRare: 2.5, ultraRare: 0.5, legendary: 0 },   // Slot 3
+  { common: 73.9, rare: 20, superRare: 5, ultraRare: 1, legendary: 0.1 },   // Slot 4
+  { common: 51, rare: 35, superRare: 10, ultraRare: 3, legendary: 1 },      // Slot 5
 ];
 
 export function pickRarity(config: typeof SLOT_CONFIG[number]): CardData['rarity'] {
