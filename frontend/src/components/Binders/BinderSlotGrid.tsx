@@ -21,7 +21,6 @@ import type { BinderSlot as SlotType } from '../../store/binderStore';
 import { BinderSlot } from './BinderSlot';
 
 interface BinderSlotGridProps {
-  binderId: string;
   slots: SlotType[];
   onReorder: (newSlots: SlotType[]) => void;
   onAddCard: (slotPosition: number) => void;
@@ -31,7 +30,6 @@ interface BinderSlotGridProps {
 }
 
 export const BinderSlotGrid: React.FC<BinderSlotGridProps> = ({
-  binderId,
   slots,
   onReorder,
   onAddCard,

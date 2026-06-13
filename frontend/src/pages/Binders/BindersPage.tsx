@@ -10,7 +10,7 @@ import { Toast } from '../../components/ui/Toast';
 
 export const BindersPage: React.FC = () => {
   const navigate = useNavigate();
-  const { binders, fetchBinders, createBinder, updateBinder, deleteBinder, loading, error } = useBinderStore();
+  const { binders, fetchBinders, createBinder, updateBinder, deleteBinder, loading } = useBinderStore();
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editData, setEditData] = useState<{ id: string, name: string, colorId: string } | null>(null);
@@ -142,7 +142,8 @@ export const BindersPage: React.FC = () => {
       {toast && (
         <Toast
           message={toast.message}
-          type={toast.type}
+          isVisible={true}
+          type={toast.type === 'success' ? 'gold' : 'ambis'}
           onClose={() => setToast(null)}
         />
       )}

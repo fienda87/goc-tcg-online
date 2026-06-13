@@ -207,7 +207,6 @@ export const BinderDetailPage: React.FC = () => {
         {/* Grid */}
         <div className="bg-black/40 backdrop-blur-md rounded-2xl p-4 md:p-8 border border-gray-800">
           <BinderSlotGrid
-            binderId={binderId!}
             slots={draftSlots}
             onReorder={handleReorder}
             onAddCard={handleAddCardClick}
@@ -236,7 +235,8 @@ export const BinderDetailPage: React.FC = () => {
       {toast && (
         <Toast
           message={toast.message}
-          type={toast.type}
+          isVisible={true}
+          type={toast.type === 'success' ? 'gold' : 'ambis'}
           onClose={() => setToast(null)}
         />
       )}

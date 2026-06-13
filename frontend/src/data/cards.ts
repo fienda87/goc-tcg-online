@@ -16,6 +16,7 @@ export interface CardData {
   weakness: string;
   lore: string;
   image_url: string;
+  imageUrl?: string;
   volume?: number;
 }
 
