@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/Button';
-import { useEnergyStore } from '../store/energyStore';
+import { useEnergyStore, MAX_GACHA } from '../store/energyStore';
 import CircularGallery from '../components/ui/CircularGallery';
 import { ALL_CARDS } from '../data/cards';
 import ScrollVelocity from '../components/ui/ScrollVelocity';
@@ -22,7 +22,7 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     // If we have max tokens, we don't need a timer
-    if (gachaCount >= 2) return;
+    if (gachaCount >= MAX_GACHA) return;
     
     const interval = setInterval(() => {
       const remaining = getSecondsUntilNextGacha();
@@ -155,7 +155,7 @@ export const Home: React.FC = () => {
             {/* Tokens Badge */}
             <div className="absolute top-4 right-4 z-20 bg-black/60 backdrop-blur-sm border border-[#d7b73b] px-3 py-1 rounded-full flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-[#d7b73b] animate-pulse" />
-              <span className="text-[#d7b73b] font-bold">{gachaCount} / 2 Tiket</span>
+              <span className="text-[#d7b73b] font-bold">{gachaCount} / {MAX_GACHA} Tiket</span>
             </div>
           </motion.div>
 
