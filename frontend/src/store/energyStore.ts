@@ -12,8 +12,8 @@ interface GachaState {
   checkRefill: () => void;
 }
 
-const COOLDOWN_SECONDS = 3600; // 1 hour
-const MAX_GACHA = 2;
+const COOLDOWN_SECONDS = 1800; // 30 minutes
+const MAX_GACHA = 3;
 
 export const useEnergyStore = create<GachaState>()(
   persist(
