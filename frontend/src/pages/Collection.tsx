@@ -44,10 +44,6 @@ export const Collection: React.FC = () => {
     return true;
   });
 
-  const elementFilters = ['All', ...ELEMENTS];
-  const rarityFilters = ['All', ...RARITIES];
-  const volumeFilters = ['All', ...VOLUMES];
-
   const NAV_ITEMS = [
     {
       id: 1,

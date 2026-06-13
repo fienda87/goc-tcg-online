@@ -1,4 +1,4 @@
-import { Badge, type BadgeProps } from './badge';
+import { Badge, type BadgeProps } from './Badge';
 import { cn } from '../../lib/utils';
 import { type HTMLAttributes, createContext, useContext } from 'react';
 
