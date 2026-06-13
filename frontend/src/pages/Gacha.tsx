@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import { useEnergyStore } from '../store/energyStore';
@@ -164,7 +164,7 @@ const FlipCard: React.FC<{
 };
 
 // ─── Interactive Pack ───
-const InteractivePack: React.FC<{ onOpen: () => void }> = ({ onOpen }) => {
+const InteractivePack: React.FC<{ onOpen: () => void, volume: number }> = ({ onOpen, volume }) => {
   const [isTearing, setIsTearing] = useState(false);
 
   const handleDragEnd = (_: any, info: any) => {
@@ -197,7 +197,7 @@ const InteractivePack: React.FC<{ onOpen: () => void }> = ({ onOpen }) => {
         style={{ clipPath: 'polygon(0 19.5%, 100% 19.5%, 100% 100%, 0 100%)' }}
       >
         <img 
-          src="/images/booster pack.webp" 
+          src={volume === 1 ? "/images/booster pack.webp" : "/images/vol2/booster pack vol 2.webp"} 
           alt="Booster Pack Bottom" 
           className="w-full h-full object-contain filter drop-shadow-md pointer-events-none" 
         />
@@ -217,7 +217,7 @@ const InteractivePack: React.FC<{ onOpen: () => void }> = ({ onOpen }) => {
         whileHover={!isTearing ? { scale: 1.02 } : {}}
       >
         <img 
-          src="/images/booster pack.webp" 
+          src={volume === 1 ? "/images/booster pack.webp" : "/images/vol2/booster pack vol 2.webp"} 
           alt="Booster Pack Top" 
           className="w-full h-full object-contain filter drop-shadow-md" 
         />
@@ -251,6 +251,8 @@ export const Gacha: React.FC = () => {
   const [flippedCount, setFlippedCount] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const volume = location.state?.volume || 1;
   const consumeGacha = useEnergyStore((s) => s.consumeGacha);
   const canOpen = useEnergyStore((s) => s.canOpenGacha());
 
@@ -269,7 +271,7 @@ export const Gacha: React.FC = () => {
   }, [canOpen, phase, navigate]);
 
   const handlePackOpen = useCallback(() => {
-    const cards = generatePull();
+    const cards = generatePull(volume);
     setPulledCards(cards);
     consumeGacha();
     
@@ -325,7 +327,7 @@ export const Gacha: React.FC = () => {
       {/* ─── Pack Phase ─── */}
       <AnimatePresence>
         {phase === 'pack' && (
-          <InteractivePack key="pack" onOpen={handlePackOpen} />
+          <InteractivePack key="pack" onOpen={handlePackOpen} volume={volume} />
         )}
       </AnimatePresence>
 

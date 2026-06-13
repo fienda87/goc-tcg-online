@@ -91,6 +91,25 @@ const faqItems: AccordionItem[] = [
       </div>
     ),
   },
+  {
+    title: "Mekanik Bolos (Retreat Cost)",
+    content: (
+      <div>
+        <p className="mb-2">Sistem penukaran kartu aktif di depan dengan kartu kawan di <em>bench</em>. Biayanya dibayar dengan membuang kartu SKS yang menempel:</p>
+        <ul className="list-none p-0 m-0">
+          <li className="mb-2">• <strong>Stage 0 (Maba):</strong> Cost 1 SKS</li>
+          <li className="mb-2">• <strong>Stage 1 (Kating):</strong> Cost 2 SKS</li>
+          <li>• <strong>Stage 2 (Sem. Akhir):</strong> Cost 3 SKS</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    title: "Bakat Bawaan (Passive Abilities)",
+    content: (
+      <p>Efek pasif permanen khusus untuk kartu tingkat kelangkaan premium (Super Rare, Ultra Rare, Exclusive Legendary). Berjalan otomatis tanpa <em>cost</em> SKS, dan banyak yang tetap aktif meski kartu di <em>bench</em>.</p>
+    ),
+  },
 ];
 
 const statusEffects: AccordionItem[] = [
@@ -116,6 +135,48 @@ const statusEffects: AccordionItem[] = [
     title: "😴 Mager",
     content: (
       <p>Kartu sendiri <strong>tidak bisa retreat</strong> selama <strong>1 giliran</strong>. Efek khas dari kartu-kartu Santuy yang terlalu santai untuk bergerak.</p>
+    ),
+  },
+  {
+    title: "💤 Sleep / Kelumpuhan",
+    content: (
+      <p>Kartu yang terkena efek Sleep <strong>tidak bisa menyerang atau menggunakan skill</strong> selama 1 giliran. Bisa disembuhkan secara instan dengan mekanik Anti-Sleep (Kafein Booster).</p>
+    ),
+  },
+  {
+    title: "🔒 SKS Lock & Food Lock",
+    content: (
+      <p>Efek sabotase yang memblokir birokrasi lawan sehingga mereka <strong>tidak bisa memasang energi SKS baru</strong> atau menggunakan kartu item Makanan pada giliran berikutnya.</p>
+    ),
+  },
+  {
+    title: "🛡️ Immunity & Anti-Sleep",
+    content: (
+      <p>Status penetral taktis yang memberikan <strong>kekebalan penuh</strong> terhadap efek negatif seperti Sleep. Sering dimiliki oleh karakter bertema Santuy atau Bucin.</p>
+    ),
+  },
+  {
+    title: "💥 Self-Burnout Tradeoff",
+    content: (
+      <p>Serangan nuklir dengan daya rusak sangat masif yang diikuti dengan <strong>efek samping instan</strong> (seperti pengurangan HP drastis atau Forced Discard ke diri sendiri).</p>
+    ),
+  },
+  {
+    title: "🎯 Taunt",
+    content: (
+      <p>Memaksa musuh aktif hanya <strong>fokus menyerang kartu dengan efek ini</strong> di giliran berikutnya.</p>
+    ),
+  },
+  {
+    title: "🔄 Forced Switch",
+    content: (
+      <p>Menyeret kartu <em>bench</em> lawan untuk <strong>maju secara paksa ke depan</strong> menggantikan kartu aktif mereka.</p>
+    ),
+  },
+  {
+    title: "⛓️ Anti-Switch",
+    content: (
+      <p>Mengunci total kartu musuh agar <strong>tidak bisa melakukan mekanik Bolos/Retreat</strong>.</p>
     ),
   },
 ];

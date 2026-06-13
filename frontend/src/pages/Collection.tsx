@@ -3,14 +3,18 @@ import { motion } from 'framer-motion';
 import { CardDetailModal } from '../components/modals/CardDetailModal';
 import { ALL_CARDS, type CardData, ELEMENT_COLORS, RARITY_COLORS } from '../data/cards';
 import { useCollectionStore } from '../store/collectionStore';
+import { DropdownNavigation } from '../components/ui/dropdown-navigation';
+import { Layers, Flame, Coffee, Heart, Star, Package, Book, BookOpen, Circle, Triangle, Hexagon, Diamond, Crown } from 'lucide-react';
 
 const ELEMENTS = ['Ambis', 'Santuy', 'Bucin', 'Event', 'Item'] as const;
 const RARITIES = ['Common', 'Rare', 'Super Rare', 'Ultra Rare', 'Exclusive Legendary'] as const;
+const VOLUMES = [1, 2] as const;
 
 export const Collection: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
   const [filterElement, setFilterElement] = useState<string>('All');
   const [filterRarity, setFilterRarity] = useState<string>('All');
+  const [filterVolume, setFilterVolume] = useState<number | 'All'>('All');
   const [viewMode, setViewMode] = useState<'koleksi' | 'galeri'>('koleksi');
   
   const ownedCards = useCollectionStore((state) => state.cards);
@@ -36,11 +40,64 @@ export const Collection: React.FC = () => {
   const filteredCards = baseCards.filter(c => {
     if (filterElement !== 'All' && c.element !== filterElement) return false;
     if (filterRarity !== 'All' && c.rarity !== filterRarity) return false;
+    if (filterVolume !== 'All' && (c.volume || 1) !== filterVolume) return false;
     return true;
   });
 
   const elementFilters = ['All', ...ELEMENTS];
   const rarityFilters = ['All', ...RARITIES];
+  const volumeFilters = ['All', ...VOLUMES];
+
+  const NAV_ITEMS = [
+    {
+      id: 1,
+      label: `Elemen: ${filterElement === 'All' ? 'Semua' : filterElement}`,
+      subMenus: [
+        {
+          title: "Pilih Elemen",
+          items: [
+            { label: "Semua", description: "Tampilkan semua elemen", icon: Layers, onClick: () => setFilterElement('All'), isActive: filterElement === 'All' },
+            { label: "Ambis", description: "Elemen akademisi", icon: Flame, onClick: () => setFilterElement('Ambis'), isActive: filterElement === 'Ambis' },
+            { label: "Santuy", description: "Elemen rebahan", icon: Coffee, onClick: () => setFilterElement('Santuy'), isActive: filterElement === 'Santuy' },
+            { label: "Bucin", description: "Elemen asmara", icon: Heart, onClick: () => setFilterElement('Bucin'), isActive: filterElement === 'Bucin' },
+            { label: "Event", description: "Kartu peristiwa", icon: Star, onClick: () => setFilterElement('Event'), isActive: filterElement === 'Event' },
+            { label: "Item", description: "Kartu perlengkapan", icon: Package, onClick: () => setFilterElement('Item'), isActive: filterElement === 'Item' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 2,
+      label: `Volume: ${filterVolume === 'All' ? 'Semua' : 'Vol ' + filterVolume}`,
+      subMenus: [
+        {
+          title: "Pilih Volume",
+          items: [
+            { label: "Semua", description: "Semua kartu", icon: Layers, onClick: () => setFilterVolume('All'), isActive: filterVolume === 'All' },
+            { label: "Vol 1", description: "Maba", icon: Book, onClick: () => setFilterVolume(1), isActive: filterVolume === 1 },
+            { label: "Vol 2", description: "Semester Akhir", icon: BookOpen, onClick: () => setFilterVolume(2), isActive: filterVolume === 2 },
+          ]
+        }
+      ]
+    },
+    {
+      id: 3,
+      label: `Rarity: ${filterRarity === 'All' ? 'Semua' : filterRarity}`,
+      subMenus: [
+        {
+          title: "Pilih Kelangkaan",
+          items: [
+            { label: "Semua", description: "Semua tingkat", icon: Layers, onClick: () => setFilterRarity('All'), isActive: filterRarity === 'All' },
+            { label: "Common", description: "IPK 1", icon: Circle, onClick: () => setFilterRarity('Common'), isActive: filterRarity === 'Common' },
+            { label: "Rare", description: "IPK 2.5", icon: Triangle, onClick: () => setFilterRarity('Rare'), isActive: filterRarity === 'Rare' },
+            { label: "Super Rare", description: "IPK 3.5", icon: Hexagon, onClick: () => setFilterRarity('Super Rare'), isActive: filterRarity === 'Super Rare' },
+            { label: "Ultra Rare", description: "IPK 4", icon: Diamond, onClick: () => setFilterRarity('Ultra Rare'), isActive: filterRarity === 'Ultra Rare' },
+            { label: "Ex. Legendary", description: "IPK 4 EX", icon: Crown, onClick: () => setFilterRarity('Exclusive Legendary'), isActive: filterRarity === 'Exclusive Legendary' },
+          ]
+        }
+      ]
+    }
+  ];
 
   return (
     <div className="flex flex-col min-h-screen px-4 md:px-12 pt-8 pb-20 overflow-x-hidden max-w-[1200px] mx-auto">
@@ -60,7 +117,7 @@ export const Collection: React.FC = () => {
         </div>
         
         {/* Toggle View Mode */}
-        <div className="flex mt-4 md:mt-0 bg-white/10 rounded-full p-1 border border-white/20">
+        <div className="flex mt-4 md:mt-0 bg-white/10 rounded-full p-1 border border-white/20 w-fit self-start md:self-auto">
           <button
             onClick={() => setViewMode('koleksi')}
             className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${viewMode === 'koleksi' ? 'bg-[#d7b73b] text-black shadow-lg' : 'text-white/60 hover:text-white'}`}
@@ -76,45 +133,9 @@ export const Collection: React.FC = () => {
         </div>
       </div>
 
-      {/* Element Filter Bar */}
-      <div className="flex gap-3 mb-3 flex-wrap">
-        {elementFilters.map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilterElement(f)}
-            className="px-5 py-2 rounded-[38px] text-[14px] font-[800] cursor-pointer border-none transition-all duration-200"
-            style={{
-              backgroundColor: filterElement === f ? '#ffffff' : 'transparent',
-              color: filterElement === f ? '#000000' : '#ffffff',
-              boxShadow: filterElement === f
-                ? 'rgb(0, 0, 0) 0px 0px 0px 2px inset'
-                : 'rgb(255, 255, 255) 0px 0px 0px 2px inset',
-            }}
-          >
-            {f === 'All' ? 'Semua' : f}
-          </button>
-        ))}
-      </div>
-
-      {/* Rarity Filter Bar */}
-      <div className="flex gap-2 mb-10 flex-wrap">
-        {rarityFilters.map((f) => {
-          const col = f !== 'All' ? RARITY_COLORS[f as CardData['rarity']] : '#ffffff';
-          return (
-            <button
-              key={f}
-              onClick={() => setFilterRarity(f)}
-              className="px-4 py-1.5 rounded-[38px] text-[12px] font-[800] cursor-pointer border-none transition-all duration-200"
-              style={{
-                backgroundColor: filterRarity === f ? col : 'transparent',
-                color: filterRarity === f ? (f === 'Common' ? '#000' : '#fff') : col,
-                boxShadow: `${col} 0px 0px 0px 2px inset`,
-              }}
-            >
-              {f === 'All' ? 'Semua Rarity' : f}
-            </button>
-          );
-        })}
+      {/* Dropdown Navigation Filters */}
+      <div className="mb-8">
+        <DropdownNavigation navItems={NAV_ITEMS} />
       </div>
 
       {/* Card sections by element */}
@@ -142,7 +163,7 @@ export const Collection: React.FC = () => {
               </span>
             </div>
 
-            <div className="flex flex-wrap gap-4 justify-start">
+            <div className="flex flex-wrap justify-center md:justify-start gap-2 sm:gap-4 md:gap-6 p-4 md:p-8 bg-black/40 backdrop-blur-xl rounded-[20px] md:rounded-[32px] border border-white/10 shadow-2xl">
               {elementCards.map((card, ci) => {
                 const rot = ((card.name.charCodeAt(0) + card.name.length) % 7) - 3;
                 const rarityColor = RARITY_COLORS[card.rarity];
@@ -162,7 +183,7 @@ export const Collection: React.FC = () => {
                     transition2={{ delay: ci * 0.03 }}
                   >
                     <div
-                      className="w-[130px] h-[182px] md:w-[160px] md:h-[224px] bg-white rounded-[13px] flex flex-col overflow-hidden"
+                      className="w-[100px] h-[140px] sm:w-[130px] sm:h-[182px] md:w-[160px] md:h-[224px] bg-white rounded-[10px] md:rounded-[13px] flex flex-col overflow-hidden"
                       style={{
                         boxShadow: hasAccent
                           ? `${rarityColor} 0px 0px 0px 3px inset`
@@ -175,9 +196,9 @@ export const Collection: React.FC = () => {
                         className="w-full flex-1 object-cover"
                         onError={(e) => { (e.target as HTMLImageElement).style.backgroundColor = '#eee'; }}
                       />
-                      <div className="p-2 bg-white border-t-2 border-black/10">
-                        <p className="text-[10px] md:text-[12px] text-black font-[800] m-0 leading-tight truncate">{card.name}</p>
-                        <p className="text-[8px] md:text-[10px] font-[800] m-0 mt-0.5" style={{ color: rarityColor }}>
+                      <div className="p-1.5 md:p-2 bg-white border-t-2 border-black/10">
+                        <p className="text-[8px] sm:text-[10px] md:text-[12px] text-black font-[800] m-0 leading-tight truncate">{card.name}</p>
+                        <p className="text-[7px] sm:text-[8px] md:text-[10px] font-[800] m-0 mt-0.5" style={{ color: rarityColor }}>
                           {card.rarityLabel}
                         </p>
                       </div>

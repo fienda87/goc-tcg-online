@@ -1,21 +1,36 @@
-import React from 'react';
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 
-interface BadgeProps {
-  children: React.ReactNode;
-  variant?: 'neutral' | 'urgent';
-  className?: string;
+import { cn } from "../../lib/utils"
+
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        default:
+          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        secondary:
+          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive:
+          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        outline: "text-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+)
+
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {}
+
+function Badge({ className, variant, ...props }: BadgeProps) {
+  return (
+    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+  )
 }
 
-export const Badge: React.FC<BadgeProps> = ({ children, variant = 'neutral', className = '' }) => {
-  let baseClass = 'rounded-[var(--radius-badge)] shadow-[var(--shadow-on-dark)] text-[var(--color-card-white)] px-4 py-2 flex items-center justify-center font-heavy ';
-  
-  if (variant === 'urgent') {
-    baseClass = 'rounded-[var(--radius-badge)] shadow-[inset_0_0_0_2px_var(--color-signal-red)] text-[var(--color-signal-red)] px-4 py-2 flex items-center justify-center font-heavy ';
-  }
-  
-  return (
-    <div className={`${baseClass} ${className}`}>
-      {children}
-    </div>
-  );
-};
+export { Badge, badgeVariants }

@@ -7,6 +7,9 @@ import CircularGallery from '../components/ui/CircularGallery';
 import { ALL_CARDS } from '../data/cards';
 import ScrollVelocity from '../components/ui/ScrollVelocity';
 import ShinyText from '../components/ui/ShinyText';
+import { Announcement, AnnouncementTag, AnnouncementTitle } from '../components/ui/announcement';
+import { ArrowUpRightIcon, Bell } from 'lucide-react';
+import { PatchNoteModal } from '../components/modals/PatchNoteModal';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -14,6 +17,8 @@ export const Home: React.FC = () => {
   
   const [timeLeft, setTimeLeft] = useState(getSecondsUntilNextGacha());
   const canOpen = canOpenGacha();
+  const [selectedVolume, setSelectedVolume] = useState<number>(1);
+  const [isPatchNoteOpen, setIsPatchNoteOpen] = useState(false);
 
   useEffect(() => {
     // If we have max tokens, we don't need a timer
@@ -97,45 +102,72 @@ export const Home: React.FC = () => {
           GET 'EM ALL
         </motion.p>
         
-        {/* Booster Box */}
-        <motion.div
-          className={`relative w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[350px] md:h-[350px] mb-8 ${canOpen ? 'cursor-pointer' : 'opacity-50 grayscale cursor-not-allowed'}`}
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: canOpen ? 1 : 0.5, y: canOpen ? [0, -10, 0] : 0 }}
-          whileHover={canOpen ? { scale: 1.05, rotate: 2 } : {}}
-          whileTap={canOpen ? { scale: 0.95 } : {}}
-          onClick={() => canOpen && navigate('/gacha')}
-          transition={{ 
-            scale: { delay: 0.3, type: 'spring' },
-            opacity: { delay: 0.3 },
-            y: canOpen ? { repeat: Infinity, duration: 4, ease: "easeInOut" } : {}
-          }}
-        >
-          <div className="absolute inset-0 bg-[#d7b73b] opacity-20 blur-3xl rounded-full" />
-          
-          {/* Box Image */}
-          <img 
-            src="/images/booster box.webp" 
-            alt="Booster Box" 
-            className="w-full h-full object-contain relative z-10 drop-shadow-[0_15px_25px_rgba(0,0,0,0.6)]"
-          />
-          
-          {/* Status Overlay */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col gap-2">
-            {!canOpen && (
-              <div className="bg-black/80 text-white font-bold px-4 py-2 rounded-lg text-center shadow-lg border border-[#d7b73b]">
-                <div className="text-sm text-[#d7b73b] mb-1">Cooldown</div>
-                <div className="text-xl">{formatTime(timeLeft)}</div>
-              </div>
-            )}
-          </div>
+        {/* Booster Box Slider */}
+        <div className="relative flex items-center justify-center w-full mb-8">
+          {/* Left Arrow */}
+          <button 
+            onClick={() => setSelectedVolume(prev => prev === 1 ? 2 : 1)}
+            className="absolute left-0 z-30 p-2 bg-black/50 hover:bg-black/80 rounded-full text-[#d7b73b] border border-[#d7b73b] transition-all"
+            aria-label="Previous Box"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
 
-          {/* Tokens Badge */}
-          <div className="absolute top-4 right-4 z-20 bg-black/60 backdrop-blur-sm border border-[#d7b73b] px-3 py-1 rounded-full flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-[#d7b73b] animate-pulse" />
-            <span className="text-[#d7b73b] font-bold">{gachaCount} / 2 Tiket</span>
-          </div>
-        </motion.div>
+          <motion.div
+            key={selectedVolume} // Re-animate when volume changes
+            className={`relative w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] md:w-[350px] md:h-[350px] ${canOpen ? 'cursor-pointer' : 'opacity-50 grayscale cursor-not-allowed'}`}
+            initial={{ scale: 0.8, opacity: 0, x: 50 }}
+            animate={{ scale: 1, opacity: canOpen ? 1 : 0.5, y: canOpen ? [0, -10, 0] : 0, x: 0 }}
+            whileHover={canOpen ? { scale: 1.05, rotate: 2 } : {}}
+            whileTap={canOpen ? { scale: 0.95 } : {}}
+            onClick={() => canOpen && navigate('/gacha', { state: { volume: selectedVolume } })}
+            transition={{ 
+              scale: { type: 'spring' },
+              opacity: { duration: 0.2 },
+              x: { type: 'spring', damping: 20 },
+              y: canOpen ? { repeat: Infinity, duration: 4, ease: "easeInOut" } : {}
+            }}
+          >
+            <div className="absolute inset-0 bg-[#d7b73b] opacity-20 blur-3xl rounded-full" />
+            
+            {/* Box Image */}
+            <img 
+              src={selectedVolume === 1 ? "/images/booster box.webp" : "/images/vol2/booster box vol 2.webp"} 
+              alt={`Booster Box Vol ${selectedVolume}`} 
+              className="w-full h-full object-contain relative z-10 drop-shadow-[0_15px_25px_rgba(0,0,0,0.6)]"
+            />
+            
+            {/* Volume Label */}
+            <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 z-30 bg-black/80 border border-[#d7b73b] px-4 py-1 rounded-full text-[#d7b73b] font-bold whitespace-nowrap text-sm sm:text-base">
+              VOL {selectedVolume}: {selectedVolume === 1 ? 'MABA' : 'SEMESTER AKHIR'}
+            </div>
+
+            {/* Status Overlay */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col gap-2 pointer-events-none">
+              {!canOpen && (
+                <div className="bg-black/80 text-white font-bold px-4 py-2 rounded-lg text-center shadow-lg border border-[#d7b73b]">
+                  <div className="text-sm text-[#d7b73b] mb-1">Cooldown</div>
+                  <div className="text-xl">{formatTime(timeLeft)}</div>
+                </div>
+              )}
+            </div>
+
+            {/* Tokens Badge */}
+            <div className="absolute top-4 right-4 z-20 bg-black/60 backdrop-blur-sm border border-[#d7b73b] px-3 py-1 rounded-full flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-[#d7b73b] animate-pulse" />
+              <span className="text-[#d7b73b] font-bold">{gachaCount} / 2 Tiket</span>
+            </div>
+          </motion.div>
+
+          {/* Right Arrow */}
+          <button 
+            onClick={() => setSelectedVolume(prev => prev === 1 ? 2 : 1)}
+            className="absolute right-0 z-30 p-2 bg-black/50 hover:bg-black/80 rounded-full text-[#d7b73b] border border-[#d7b73b] transition-all"
+            aria-label="Next Box"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
         
         {/* Actions */}
         <motion.div 
@@ -147,7 +179,7 @@ export const Home: React.FC = () => {
           <Button 
             fullWidth 
             className="py-[16px] text-[24px] shadow-[0_0_20px_rgba(215,183,59,0.3)]"
-            onClick={() => navigate('/gacha')}
+            onClick={() => navigate('/gacha', { state: { volume: selectedVolume } })}
             disabled={!canOpen}
           >
             {canOpen ? `BUKA PACK (${gachaCount} TERSISA)` : `TUNGGU ${formatTime(timeLeft)}`}
@@ -160,6 +192,7 @@ export const Home: React.FC = () => {
         </motion.div>
 
       </div>
+
 
       {/* Circular Gallery Section */}
       <motion.div 
@@ -180,6 +213,43 @@ export const Home: React.FC = () => {
           mysteryMode={true}
         />
       </motion.div>
+
+      {/* Floating Announcements */}
+      {/* Desktop: Bottom Left */}
+      <motion.div
+        className="fixed bottom-8 left-8 z-50 hidden md:block cursor-pointer"
+        initial={{ x: -50, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ type: 'spring', damping: 15, delay: 0.5 }}
+        onClick={() => setIsPatchNoteOpen(true)}
+      >
+        <Announcement>
+          <AnnouncementTag>Update v2.0</AnnouncementTag>
+          <AnnouncementTitle>
+            Patch Ledakan Peniada Semester
+            <ArrowUpRightIcon size={16} className="shrink-0 text-[#d7b73b]" />
+          </AnnouncementTitle>
+        </Announcement>
+      </motion.div>
+
+      {/* Mobile: Bottom Right Blinking Icon */}
+      <motion.div
+        className="fixed bottom-6 right-4 z-50 md:hidden cursor-pointer"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        onClick={() => setIsPatchNoteOpen(true)}
+      >
+        <div className="relative flex items-center justify-center gap-2 bg-[#111] border border-[#d7b73b] rounded-full shadow-[0_0_15px_rgba(215,183,59,0.3)] px-4 py-2 group">
+          <div className="absolute inset-0 bg-[#d7b73b]/20 animate-pulse rounded-full" />
+          <Bell className="w-4 h-4 text-[#d7b73b] animate-bounce" />
+          <span className="text-[#d7b73b] font-bold text-xs tracking-wider uppercase relative z-10">New Update</span>
+          {/* Notification Dot */}
+          <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border border-[#111] animate-ping" />
+          <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border border-[#111]" />
+        </div>
+      </motion.div>
+
+      <PatchNoteModal isOpen={isPatchNoteOpen} onClose={() => setIsPatchNoteOpen(false)} />
     </div>
   );
 };
