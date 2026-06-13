@@ -25,7 +25,7 @@ export const BinderDetailPage: React.FC = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedSlotPosition, setSelectedSlotPosition] = useState<number | undefined>(undefined);
   const [actionLoading, setActionLoading] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error'; showConfetti?: boolean } | null>(null);
 
   // For responsive pagination
   const [itemsPerPage, setItemsPerPage] = useState(24); // Desktop defaults to 24 (all)
@@ -78,7 +78,7 @@ export const BinderDetailPage: React.FC = () => {
     // Check duplicates in draft
     const cardExists = draftSlots.some((s) => s.card?.name === card.name);
     if (cardExists) {
-      setToast({ message: 'Kartu ini sudah ada di dalam binder', type: 'error' });
+      setToast({ message: 'Kartu ini sudah ada di dalam binder', type: 'error', showConfetti: false });
       return;
     }
 
@@ -88,7 +88,7 @@ export const BinderDetailPage: React.FC = () => {
     if (targetPosition === undefined) {
       const emptyIndex = newSlots.findIndex((s) => s.card === null);
       if (emptyIndex === -1) {
-        setToast({ message: 'Binder sudah penuh', type: 'error' });
+        setToast({ message: 'Binder sudah penuh', type: 'error', showConfetti: false });
         return;
       }
       targetPosition = emptyIndex;
@@ -102,7 +102,7 @@ export const BinderDetailPage: React.FC = () => {
     setDraftSlots(newSlots);
     setIsDirty(true);
     setIsAddModalOpen(false);
-    setToast({ message: 'Kartu berhasil ditambahkan ke draft!', type: 'success' });
+    setToast({ message: 'Kartu berhasil ditambahkan ke draft!', type: 'success', showConfetti: false });
   };
 
   const handleRemoveCardClick = (slotPosition: number) => {
@@ -113,7 +113,7 @@ export const BinderDetailPage: React.FC = () => {
     };
     setDraftSlots(newSlots);
     setIsDirty(true);
-    setToast({ message: 'Kartu dilepas dari slot!', type: 'success' });
+    setToast({ message: 'Kartu dilepas dari slot!', type: 'success', showConfetti: false });
   };
 
   const handleSaveBinder = async () => {
@@ -126,9 +126,9 @@ export const BinderDetailPage: React.FC = () => {
       
       await reorderSlots(binderId, payload);
       setIsDirty(false);
-      setToast({ message: 'Binder berhasil disimpan!', type: 'success' });
+      setToast({ message: 'Binder berhasil disimpan!', type: 'success', showConfetti: true });
     } catch (err: any) {
-      setToast({ message: err.message || 'Gagal menyimpan binder', type: 'error' });
+      setToast({ message: err.message || 'Gagal menyimpan binder', type: 'error', showConfetti: false });
     } finally {
       setActionLoading(false);
     }
@@ -237,6 +237,7 @@ export const BinderDetailPage: React.FC = () => {
           message={toast.message}
           isVisible={true}
           type={toast.type === 'success' ? 'gold' : 'ambis'}
+          showConfetti={toast.showConfetti}
           onClose={() => setToast(null)}
         />
       )}

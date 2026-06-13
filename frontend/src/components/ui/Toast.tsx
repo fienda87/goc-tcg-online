@@ -8,33 +8,36 @@ interface ToastProps {
   isVisible: boolean;
   onClose: () => void;
   type?: 'ambis' | 'santuy' | 'bucin' | 'gold' | 'blue';
+  showConfetti?: boolean;
 }
 
-export const Toast: React.FC<ToastProps> = ({ message, emoji = '🎉', isVisible, onClose, type = 'gold' }) => {
+export const Toast: React.FC<ToastProps> = ({ message, emoji = '🎉', isVisible, onClose, type = 'gold', showConfetti = false }) => {
   useEffect(() => {
     if (isVisible) {
-      // Fire confetti
-      const colors = {
-        'ambis': ['#fe2f2f', '#ffffff'],
-        'santuy': ['#d7b73b', '#ffffff'],
-        'bucin': ['#7333f1', '#ffffff'],
-        'gold': ['#d7b73b', '#fffe5b'],
-        'blue': ['#1b5bff', '#a0e9ff']
-      };
-      
-      confetti({
-        particleCount: 60,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: colors[type] || colors.gold
-      });
+      if (showConfetti) {
+        // Fire confetti
+        const colors = {
+          'ambis': ['#fe2f2f', '#ffffff'],
+          'santuy': ['#d7b73b', '#ffffff'],
+          'bucin': ['#7333f1', '#ffffff'],
+          'gold': ['#d7b73b', '#fffe5b'],
+          'blue': ['#1b5bff', '#a0e9ff']
+        };
+        
+        confetti({
+          particleCount: 60,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: colors[type] || colors.gold
+        });
+      }
 
       const timer = setTimeout(() => {
         onClose();
       }, 4000);
       return () => clearTimeout(timer);
     }
-  }, [isVisible, onClose, type]);
+  }, [isVisible, onClose, type, showConfetti]);
 
   return (
     <AnimatePresence>

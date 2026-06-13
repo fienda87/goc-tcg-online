@@ -18,7 +18,7 @@ export const BindersPage: React.FC = () => {
   const [deleteData, setDeleteData] = useState<{ id: string, name: string } | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error'; showConfetti?: boolean } | null>(null);
 
   useEffect(() => {
     fetchBinders();
@@ -29,10 +29,10 @@ export const BindersPage: React.FC = () => {
     try {
       if (editData) {
         await updateBinder(editData.id, name, colorId);
-        setToast({ message: 'Binder berhasil diperbarui!', type: 'success' });
+        setToast({ message: 'Binder berhasil diperbarui!', type: 'success', showConfetti: true });
       } else {
         await createBinder(name, colorId);
-        setToast({ message: 'Binder berhasil dibuat!', type: 'success' });
+        setToast({ message: 'Binder berhasil dibuat!', type: 'success', showConfetti: true });
       }
       setIsCreateModalOpen(false);
       setEditData(null);
@@ -48,10 +48,10 @@ export const BindersPage: React.FC = () => {
     setActionLoading(true);
     try {
       await deleteBinder(deleteData.id);
-      setToast({ message: 'Binder berhasil dihapus!', type: 'success' });
+      setToast({ message: 'Binder berhasil dihapus!', type: 'success', showConfetti: false });
       setDeleteData(null);
     } catch (err: any) {
-      setToast({ message: err.message || 'Gagal menghapus binder', type: 'error' });
+      setToast({ message: err.message || 'Gagal menghapus binder', type: 'error', showConfetti: false });
     } finally {
       setActionLoading(false);
     }
@@ -144,6 +144,7 @@ export const BindersPage: React.FC = () => {
           message={toast.message}
           isVisible={true}
           type={toast.type === 'success' ? 'gold' : 'ambis'}
+          showConfetti={toast.showConfetti}
           onClose={() => setToast(null)}
         />
       )}
