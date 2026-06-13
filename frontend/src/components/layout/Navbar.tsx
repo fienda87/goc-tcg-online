@@ -5,6 +5,7 @@ export const Navbar: React.FC = () => {
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
     { label: 'Koleksi', ariaLabel: 'View collection', link: '/collection' },
+    { label: 'Binder', ariaLabel: 'View binder', link: '/binders' },
     { label: 'Aturan', ariaLabel: 'Read rules', link: '/rules' },
   ];
 

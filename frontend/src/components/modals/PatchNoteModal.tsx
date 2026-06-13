@@ -195,6 +195,26 @@ export const PatchNoteModal: React.FC<PatchNoteModalProps> = ({ isOpen, onClose 
                 </div>
               </div>
             </section>
+ 
+            {/* Section 4: Binder Feature */}
+            <section className="space-y-4">
+              <h3 className="text-xl md:text-2xl font-bold text-blue-400 flex items-center gap-3 border-b border-white/10 pb-3 mt-8">
+                <span className="bg-blue-500/20 p-2 rounded-lg">📘</span> 4. FITUR BARU: SHOWCASE BINDER (BETA)
+              </h3>
+              
+              <div className="pl-2 space-y-4 text-[15px] leading-relaxed text-white/70">
+                <p>
+                  Kini hadir fitur **Showcase Binder** untuk memamerkan dan menyusun kartu-kartu favorit hasil gacha Anda!
+                </p>
+                <div className="bg-black/40 border border-white/5 rounded-xl p-5 space-y-3">
+                  <p><span className="text-[#d7b73b] font-semibold">📁 Kustomisasi Binder:</span> Buat hingga maksimal <strong>5 Binder</strong> dengan nama kustom Anda sendiri dan pilih 1 dari 12 preset warna tema yang menarik.</p>
+                  <p><span className="text-[#d7b73b] font-semibold">🃏 Slot Kartu (Max 24):</span> Isi binder Anda dengan hingga 24 kartu pilihan dari koleksi Anda. Anda bebas menyimpan jumlah berapapun (misal hanya 1 kartu saja).</p>
+                  <p><span className="text-[#d7b73b] font-semibold">👆 Drag-and-Drop Reorder:</span> Geser dan atur ulang letak/posisi kartu di dalam binder secara visual.</p>
+                  <p><span className="text-[#d7b73b] font-semibold">⚡ Desain Draf & Tombol Simpan:</span> Lakukan modifikasi sesuka hati, lalu tekan tombol **SIMPAN** (💾) untuk menulis perubahan secara permanen ke <em>localStorage</em> browser Anda.</p>
+                  <p><span className="text-[#d7b73b] font-semibold">📱 Haptic Press di Mobile:</span> Khusus untuk pengguna HP, **tahan kartu selama 250ms** untuk mulai menyeretnya. Ini memastikan navigasi gulir (*scroll*) halaman tetap berjalan normal tanpa macet.</p>
+                </div>
+              </div>
+            </section>
 
           </div>
         </motion.div>

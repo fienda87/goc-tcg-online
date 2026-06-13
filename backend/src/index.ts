@@ -7,6 +7,7 @@ import gachaRoutes from './routes/gacha';
 import energyRoutes from './routes/energy';
 import cardsRoutes from './routes/cards';
 import inventoryRoutes from './routes/inventory';
+import bindersRoutes from './routes/binders';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use('/api/gacha', gachaRoutes);
 app.use('/api/energy', energyRoutes);
 app.use('/api/cards', cardsRoutes);
 app.use('/api/inventory', inventoryRoutes);
+app.use('/api/binders', bindersRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
