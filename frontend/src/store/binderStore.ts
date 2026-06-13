@@ -294,9 +294,12 @@ export const useBinderStore = create<BinderStore>()(
           }
         }
 
+        const newCardCount = reconstructedSlots.filter((s) => s.card !== null).length;
+
         const updatedBinder: BinderDetail = {
           ...binder,
           slots: reconstructedSlots,
+          cardCount: newCardCount,
           updatedAt: new Date().toISOString(),
         };
 
