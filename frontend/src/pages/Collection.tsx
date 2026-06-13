@@ -8,7 +8,7 @@ import { Layers, Flame, Coffee, Heart, Star, Package, Book, BookOpen, Circle, Tr
 
 const ELEMENTS = ['Ambis', 'Santuy', 'Bucin', 'Event', 'Item'] as const;
 const RARITIES = ['Common', 'Rare', 'Super Rare', 'Ultra Rare', 'Exclusive Legendary'] as const;
-const VOLUMES = [1, 2] as const;
+
 
 export const Collection: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
