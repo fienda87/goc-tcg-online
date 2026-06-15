@@ -69,11 +69,13 @@ const faqItems: AccordionItem[] = [
     title: "Berapa peluang mendapatkan kartu langka?",
     content: (
       <div>
-        <p className="mb-2">Setiap slot di pack punya peluang berbeda:</p>
+        <p className="mb-2">Setiap kartu yang kamu dapatkan memiliki peluang kelangkaan sebagai berikut:</p>
         <ul className="list-none p-0 m-0">
-          <li className="mb-2">• <strong>Slot 1–3:</strong> 70% Stage 0 (Maba), 30% Stage 1 (Kating)</li>
-          <li className="mb-2">• <strong>Slot 4:</strong> 75% Stage 0, 25% Stage 1</li>
-          <li>• <strong>Slot 5 (Kartu Utama):</strong> 25% Stage 0, 70% Stage 1, <strong>5% Stage 2 (Ultra Rare!)</strong></li>
+          <li className="mb-2">• ⚪ <strong>Common (Biasa):</strong> 60%</li>
+          <li className="mb-2">• 🔵 <strong>Rare (Langka):</strong> 25%</li>
+          <li className="mb-2">• 🟣 <strong>Super Rare (SR):</strong> 10%</li>
+          <li className="mb-2">• 🟡 <strong>Ultra Rare (UR):</strong> 4.5%</li>
+          <li>• 🔴 <strong>Exclusive Legendary:</strong> 0.5%</li>
         </ul>
       </div>
     ),
@@ -108,6 +110,35 @@ const faqItems: AccordionItem[] = [
     title: "Bakat Bawaan (Passive Abilities)",
     content: (
       <p>Efek pasif permanen khusus untuk kartu tingkat kelangkaan premium (Super Rare, Ultra Rare, Exclusive Legendary). Berjalan otomatis tanpa <em>cost</em> SKS, dan banyak yang tetap aktif meski kartu di <em>bench</em>.</p>
+    ),
+  },
+  {
+    title: "Bagaimana sistem Pity Gacha bekerja?",
+    content: (
+      <div>
+        <p className="mb-2">Sistem Pity (Jaminan) membantu kamu mendapatkan kartu langka jika kurang beruntung:</p>
+        <ul className="list-none p-0 m-0">
+          <li className="mb-2">• Setiap kali kamu membuka booster pack tanpa mendapatkan kartu <strong>Super Rare (SR), Ultra Rare (UR), atau Exclusive Legendary</strong>, pity meter kamu akan bertambah <strong>+1</strong>.</li>
+          <li className="mb-2">• Jika pity meter mencapai <strong>20/20</strong>, maka di pembukaan pack berikutnya (gacha ke-21), Slot ke-5 kartu dijamin 100% adalah kartu tingkat tinggi dengan peluang: <strong>SR (55%), UR (35%), atau Exclusive Legendary (10%)</strong>.</li>
+          <li>• Jika kamu mendapatkan kartu SR, UR, atau Exclusive Legendary secara alami di tengah jalan sebelum mencapai 20 pulls, pity meter akan <strong>langsung kembali ke 0</strong>.</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    title: "Apa itu IP Points dan Shop?",
+    content: (
+      <div>
+        <p className="mb-2"><strong>IP Points (Indeks Prestasi Points)</strong> adalah mata uang khusus yang diperoleh dari mendaur ulang kartu duplikat:</p>
+        <ul className="list-none p-0 m-0 mb-4">
+          <li className="mb-2">• ⚪ <strong>Common Duplicate:</strong> +1 IP Point</li>
+          <li className="mb-2">• 🔵 <strong>Rare Duplicate:</strong> +5 IP Points</li>
+          <li className="mb-2">• 🟣 <strong>Super Rare (SR) Duplicate:</strong> +15 IP Points</li>
+          <li className="mb-2">• 🟡 <strong>Ultra Rare (UR) Duplicate:</strong> +50 IP Points</li>
+          <li>• 🔴 <strong>Exclusive Legendary Duplicate:</strong> +200 IP Points</li>
+        </ul>
+        <p>Gunakan IP Points di halaman <strong>Shop</strong> untuk membeli kartu langka secara langsung, atau membeli <strong>Refresh Orb</strong> (+1 Energi Gacha).</p>
+      </div>
     ),
   },
 ];

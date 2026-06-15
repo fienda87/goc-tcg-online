@@ -250,9 +250,13 @@ export const Gacha: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
   const [flippedCount, setFlippedCount] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [earnedPoints, setEarnedPoints] = useState<number>(0);
   const navigate = useNavigate();
   const location = useLocation();
   const volume = location.state?.volume || 1;
+  const pityCount = useEnergyStore((s) => s.pityCount);
+  const incrementPity = useEnergyStore((s) => s.incrementPity);
+  const resetPity = useEnergyStore((s) => s.resetPity);
   const consumeGacha = useEnergyStore((s) => s.consumeGacha);
   const canOpen = useEnergyStore((s) => s.canOpenGacha());
 
@@ -271,18 +275,52 @@ export const Gacha: React.FC = () => {
   }, [canOpen, phase, navigate]);
 
   const handlePackOpen = useCallback(() => {
-    const cards = generatePull(volume);
+    const isPityActive = pityCount >= 20;
+    const cards = generatePull(volume, isPityActive);
     setPulledCards(cards);
     consumeGacha();
     
-    // Save to collection
+    // Save to collection and calculate duplicates reward
     import('../store/collectionStore').then(({ useCollectionStore }) => {
       const existingCards = useCollectionStore.getState().cards;
+      
+      let calculatedPoints = 0;
+      const addedInThisPull: string[] = [];
+      
+      cards.forEach(card => {
+        const isDupe = existingCards.some(ec => ec.name === card.name) || addedInThisPull.includes(card.name);
+        if (isDupe) {
+          let pts = 1;
+          if (card.rarity === 'Rare') pts = 5;
+          else if (card.rarity === 'Super Rare') pts = 15;
+          else if (card.rarity === 'Ultra Rare') pts = 50;
+          else if (card.rarity === 'Exclusive Legendary') pts = 200;
+          calculatedPoints += pts;
+        } else {
+          addedInThisPull.push(card.name);
+        }
+      });
+      
       useCollectionStore.getState().setCards([...existingCards, ...cards]);
+      if (calculatedPoints > 0) {
+        useCollectionStore.getState().addIpPoints(calculatedPoints);
+      }
+      setEarnedPoints(calculatedPoints);
     });
+
+    const gotHighTier = cards.some(card => 
+      card.rarity === 'Super Rare' || 
+      card.rarity === 'Ultra Rare' || 
+      card.rarity === 'Exclusive Legendary'
+    );
+    if (gotHighTier) {
+      resetPity();
+    } else {
+      incrementPity();
+    }
     
     setPhase('reveal');
-  }, [consumeGacha]);
+  }, [consumeGacha, volume, pityCount, incrementPity, resetPity]);
 
   const handleCardFlip = useCallback(() => {
     const newCount = flippedCount + 1;
@@ -297,6 +335,7 @@ export const Gacha: React.FC = () => {
     setPulledCards([]);
     setFlippedCount(0);
     setSelectedCard(null);
+    setEarnedPoints(0);
   }, []);
 
   // Fan layout calculation
@@ -330,6 +369,36 @@ export const Gacha: React.FC = () => {
           <InteractivePack key="pack" onOpen={handlePackOpen} volume={volume} />
         )}
       </AnimatePresence>
+
+      {/* Pity Progress Bar */}
+      {phase === 'pack' && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="absolute bottom-10 flex flex-col items-center gap-2 z-10 w-[280px]"
+        >
+          <div className="flex justify-between w-full text-[13px] font-[800] text-white/60">
+            <span>Pity Meter: {pityCount}/20</span>
+            {pityCount >= 20 ? (
+              <span className="text-[#d7b73b] animate-pulse">PITY ACTIVE!</span>
+            ) : (
+              <span>UR / Legendary Guaranteed</span>
+            )}
+          </div>
+          <div className="w-full h-[6px] bg-white/10 rounded-full overflow-hidden border border-white/5 relative">
+            <motion.div 
+              className="h-full bg-gradient-to-r from-[#7333f1] via-[#d7b73b] to-[#fe2f2f] rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(100, (pityCount / 20) * 100)}%` }}
+              transition={{ type: 'spring', stiffness: 80, damping: 15 }}
+              style={{
+                boxShadow: pityCount >= 20 ? '0 0 10px #d7b73b' : 'none'
+              }}
+            />
+          </div>
+        </motion.div>
+      )}
 
       {/* ─── Reveal & Fan Phase ─── */}
       {(phase === 'reveal' || phase === 'orbit' || phase === 'done') && pulledCards.length > 0 && (
@@ -412,6 +481,19 @@ export const Gacha: React.FC = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: 'spring', damping: 15 }}
           >
+            {earnedPoints > 0 && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ type: 'spring', damping: 15, delay: 0.2 }}
+                className="bg-[#d7b73b]/10 border border-[#d7b73b]/30 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center gap-2 mb-2 shadow-lg shadow-[#d7b73b]/5"
+              >
+                <span className="text-[16px]">🎓</span>
+                <span className="text-[13px] font-[800] text-[#d7b73b] tracking-wide">
+                  +{earnedPoints} IP Points dari kartu duplikat!
+                </span>
+              </motion.div>
+            )}
             <div className="flex gap-2 mb-2">
               {pulledCards.map((card, i) => (
                 <motion.div

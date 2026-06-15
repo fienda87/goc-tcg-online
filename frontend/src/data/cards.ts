@@ -166,14 +166,16 @@ export const RARITY_POOLS = {
 
 // Gacha slot probabilities (5 slots per pack)
 export const SLOT_CONFIG = [
-  { common: 82, rare: 15, superRare: 2.5, ultraRare: 0.5, legendary: 0 },   // Slot 1
-  { common: 82, rare: 15, superRare: 2.5, ultraRare: 0.5, legendary: 0 },   // Slot 2
-  { common: 82, rare: 15, superRare: 2.5, ultraRare: 0.5, legendary: 0 },   // Slot 3
-  { common: 73.9, rare: 20, superRare: 5, ultraRare: 1, legendary: 0.1 },   // Slot 4
-  { common: 51, rare: 35, superRare: 10, ultraRare: 3, legendary: 1 },      // Slot 5
+  { common: 60, rare: 25, superRare: 10, ultraRare: 4.5, legendary: 0.5 },   // Slot 1
+  { common: 60, rare: 25, superRare: 10, ultraRare: 4.5, legendary: 0.5 },   // Slot 2
+  { common: 60, rare: 25, superRare: 10, ultraRare: 4.5, legendary: 0.5 },   // Slot 3
+  { common: 60, rare: 25, superRare: 10, ultraRare: 4.5, legendary: 0.5 },   // Slot 4
+  { common: 60, rare: 25, superRare: 10, ultraRare: 4.5, legendary: 0.5 },   // Slot 5
 ];
 
-export function pickRarity(config: typeof SLOT_CONFIG[number]): CardData['rarity'] {
+export const PITY_CONFIG = { common: 0, rare: 0, superRare: 55, ultraRare: 35, legendary: 10 };
+
+export function pickRarity(config: { common: number; rare: number; superRare: number; ultraRare: number; legendary: number }): CardData['rarity'] {
   const roll = Math.random() * 100; // Use precise float for accurate decimal percentages
   if (roll < config.common) return 'Common';
   if (roll < config.common + config.rare) return 'Rare';
@@ -195,9 +197,10 @@ export function pickRandomCardFromPool(rarity: CardData['rarity'], volume: numbe
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-export function generatePull(volume: number = 1): CardData[] {
-  return SLOT_CONFIG.map((config) => {
-    const rarity = pickRarity(config);
+export function generatePull(volume: number = 1, isPityActive: boolean = false): CardData[] {
+  return SLOT_CONFIG.map((config, index) => {
+    const finalConfig = (isPityActive && index === 4) ? PITY_CONFIG : config;
+    const rarity = pickRarity(finalConfig);
     const card = pickRandomCardFromPool(rarity, volume);
     return { ...card, id: `${Date.now()}-${Math.random()}` };
   });

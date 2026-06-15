@@ -28,6 +28,7 @@ const Login = lazyWithRetry(() => import('../../pages/Login').then(m => ({ defau
 const Register = lazyWithRetry(() => import('../../pages/Register').then(m => ({ default: m.Register })));
 const BindersPage = lazyWithRetry(() => import('../../pages/Binders/BindersPage').then(m => ({ default: m.BindersPage })));
 const BinderDetailPage = lazyWithRetry(() => import('../../pages/Binders/BinderDetailPage').then(m => ({ default: m.BinderDetailPage })));
+const Shop = lazyWithRetry(() => import('../../pages/Shop').then(m => ({ default: m.Shop })));
 
 const LoadingFallback = () => (
   <div className="w-full h-[60vh] flex items-center justify-center">
@@ -50,6 +51,7 @@ export const AnimatedRoutes = () => {
           <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
           <Route path="/binders" element={<PageTransition><BindersPage /></PageTransition>} />
           <Route path="/binders/:binderId" element={<PageTransition><BinderDetailPage /></PageTransition>} />
+          <Route path="/shop" element={<PageTransition><Shop /></PageTransition>} />
         </Routes>
       </Suspense>
     </AnimatePresence>
