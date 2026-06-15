@@ -23,11 +23,11 @@ type Props = {
 };
 
 export function DropdownNavigation({ navItems }: Props) {
-  const [openMenu, setOpenMenu] = React.useState<string | null>(null);
+  const [openMenu, setOpenMenu] = React.useState<number | null>(null);
   const [isHover, setIsHover] = useState<number | null>(null);
 
-  const handleHover = (menuLabel: string | null) => {
-    setOpenMenu(menuLabel);
+  const handleHover = (menuId: number | null) => {
+    setOpenMenu(menuId);
   };
 
   return (
@@ -36,14 +36,14 @@ export function DropdownNavigation({ navItems }: Props) {
         <ul className="relative flex items-center space-x-2 flex-wrap gap-y-2">
           {navItems.map((navItem) => (
             <li
-              key={navItem.label}
+              key={navItem.id}
               className="relative"
-              onMouseEnter={() => handleHover(navItem.label)}
+              onMouseEnter={() => handleHover(navItem.id)}
               onMouseLeave={() => handleHover(null)}
             >
               <button
                 className={`text-sm py-2 px-4 rounded-full border transition-colors duration-300 flex items-center justify-center gap-2 relative ${
-                  openMenu === navItem.label || isHover === navItem.id
+                  openMenu === navItem.id || isHover === navItem.id
                     ? "border-[#d7b73b] text-[#d7b73b] bg-black/40"
                     : "border-white/20 text-white hover:border-[#d7b73b] hover:text-[#d7b73b]"
                 }`}
@@ -54,13 +54,13 @@ export function DropdownNavigation({ navItems }: Props) {
                 {navItem.subMenus && (
                   <ChevronDown
                     className={`h-4 w-4 transition-transform duration-300
-                      ${openMenu === navItem.label ? "rotate-180" : ""}`}
+                      ${openMenu === navItem.id ? "rotate-180" : ""}`}
                   />
                 )}
               </button>
 
               <AnimatePresence>
-                {openMenu === navItem.label && navItem.subMenus && (
+                {openMenu === navItem.id && navItem.subMenus && (
                   <div className="absolute left-0 top-full pt-2 w-auto min-w-[200px]">
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}

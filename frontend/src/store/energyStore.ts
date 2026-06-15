@@ -5,14 +5,16 @@ interface GachaState {
   gachaCount: number; // Max 2
   lastGachaTime: number | null; // Timestamp when the timer started
   isUnlimited: boolean;
-  pityCount: number;
+  pityCount: number; // Retained for compatibility
+  pityCountVol1: number;
+  pityCountVol2: number;
   setGachaData: (data: Partial<GachaState>) => void;
   consumeGacha: () => void;
   canOpenGacha: () => boolean;
   getSecondsUntilNextGacha: () => number;
   checkRefill: () => void;
-  incrementPity: () => void;
-  resetPity: () => void;
+  incrementPity: (volume?: number) => void;
+  resetPity: (volume?: number) => void;
 }
 
 export const COOLDOWN_SECONDS = 1800; // 30 minutes
@@ -25,9 +27,23 @@ export const useEnergyStore = create<GachaState>()(
       lastGachaTime: null,
       isUnlimited: false,
       pityCount: 0,
+      pityCountVol1: 0,
+      pityCountVol2: 0,
       setGachaData: (data) => set((state) => ({ ...state, ...data })),
-      incrementPity: () => set((state) => ({ pityCount: state.pityCount + 1 })),
-      resetPity: () => set({ pityCount: 0 }),
+      incrementPity: (volume = 1) => set((state) => {
+        if (volume === 2) {
+          return { pityCountVol2: state.pityCountVol2 + 1 };
+        } else {
+          return { pityCountVol1: state.pityCountVol1 + 1 };
+        }
+      }),
+      resetPity: (volume = 1) => {
+        if (volume === 2) {
+          set({ pityCountVol2: 0 });
+        } else {
+          set({ pityCountVol1: 0 });
+        }
+      },
       checkRefill: () => {
         const state = get();
         if (state.gachaCount > MAX_GACHA) {

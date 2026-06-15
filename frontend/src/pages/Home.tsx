@@ -13,12 +13,14 @@ import { PatchNoteModal } from '../components/modals/PatchNoteModal';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { canOpenGacha, getSecondsUntilNextGacha, gachaCount } = useEnergyStore();
+  const { canOpenGacha, getSecondsUntilNextGacha, gachaCount, pityCountVol1, pityCountVol2 } = useEnergyStore();
   
   const [timeLeft, setTimeLeft] = useState(getSecondsUntilNextGacha());
   const canOpen = canOpenGacha();
   const [selectedVolume, setSelectedVolume] = useState<number>(1);
   const [isPatchNoteOpen, setIsPatchNoteOpen] = useState(false);
+
+  const currentPity = selectedVolume === 2 ? pityCountVol2 : pityCountVol1;
 
   useEffect(() => {
     // If we have max tokens, we don't need a timer
@@ -168,6 +170,36 @@ export const Home: React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
           </button>
         </div>
+
+        {/* Pity Progress Bar */}
+        <motion.div 
+          className="w-full bg-[#121214]/85 backdrop-blur-md border border-white/10 rounded-[18px] p-4 flex flex-col gap-2 relative overflow-hidden mb-4 mt-2 shadow-xl"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <div className="flex justify-between items-center text-xs font-[800] text-white/70">
+            <span className="flex items-center gap-1.5">
+              🎯 Pity Meter (Vol {selectedVolume}): <span className="text-[#d7b73b]">{currentPity}</span>/20
+            </span>
+            {currentPity >= 20 ? (
+              <span className="text-[#d7b73b] animate-pulse tracking-wide font-black">PITY AKTIF!</span>
+            ) : (
+              <span className="text-white/40 font-medium">Jaminan SR+ pada gacha ke-21</span>
+            )}
+          </div>
+          <div className="w-full h-2.5 bg-black/40 rounded-full overflow-hidden border border-white/5 relative">
+            <motion.div 
+              className="h-full rounded-full bg-gradient-to-r from-[#8a2be2] via-[#da70d6] to-[#d7b73b]"
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(100, (currentPity / 20) * 100)}%` }}
+              transition={{ type: 'spring', stiffness: 60, damping: 15 }}
+              style={{ 
+                boxShadow: currentPity >= 20 ? '0 0 12px #d7b73b' : 'none'
+              }}
+            />
+          </div>
+        </motion.div>
         
         {/* Actions */}
         <motion.div 

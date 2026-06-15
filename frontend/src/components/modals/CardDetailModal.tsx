@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { type CardData, RARITY_COLORS } from '../../data/cards';
 import TiltedCard from '../ui/TiltedCard';
@@ -23,10 +24,10 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({ card, onClose 
     </button>
   );
 
-  return (
+  return createPortal(
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8"
         style={{ backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', perspective: 1200 }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -42,7 +43,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({ card, onClose 
           onClick={(e) => e.stopPropagation()}
         >
           {/* Responsive sizing: width-based on mobile, height-based on larger screens */}
-          <div className="relative aspect-[2.5/3.5] w-[85vw] max-w-[320px] sm:w-auto sm:max-w-none sm:h-[80vh] md:h-[85vh]">
+          <div className="relative aspect-[2.5/3.5] w-[85vw] max-w-[320px] sm:w-auto sm:max-w-none sm:h-[75vh] md:h-[80vh]">
             <TiltedCard
               imageSrc={card.image_url}
               altText={card.name}
@@ -65,6 +66,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({ card, onClose 
           </div>
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

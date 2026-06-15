@@ -254,7 +254,7 @@ export const Gacha: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const volume = location.state?.volume || 1;
-  const pityCount = useEnergyStore((s) => s.pityCount);
+  const pityCount = useEnergyStore((s) => volume === 2 ? s.pityCountVol2 : s.pityCountVol1);
   const incrementPity = useEnergyStore((s) => s.incrementPity);
   const resetPity = useEnergyStore((s) => s.resetPity);
   const consumeGacha = useEnergyStore((s) => s.consumeGacha);
@@ -314,9 +314,9 @@ export const Gacha: React.FC = () => {
       card.rarity === 'Exclusive Legendary'
     );
     if (gotHighTier) {
-      resetPity();
+      resetPity(volume);
     } else {
-      incrementPity();
+      incrementPity(volume);
     }
     
     setPhase('reveal');
