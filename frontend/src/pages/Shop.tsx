@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import { useCollectionStore } from '../store/collectionStore';
 import { useEnergyStore } from '../store/energyStore';
 import { ALL_CARDS, type CardData, RARITY_COLORS } from '../data/cards';
@@ -13,14 +12,14 @@ interface DuplicateItem {
   pointsValue: number;
 }
 
-const RARITY_PRICE = {
+const RARITY_PRICE: Record<string, number> = {
   'Rare': 50,
   'Super Rare': 150,
   'Ultra Rare': 500,
   'Exclusive Legendary': 1500,
 };
 
-const DUPLICATE_POINTS = {
+const DUPLICATE_POINTS: Record<string, number> = {
   'Common': 1,
   'Rare': 5,
   'Super Rare': 15,
@@ -29,7 +28,6 @@ const DUPLICATE_POINTS = {
 };
 
 export const Shop: React.FC = () => {
-  const navigate = useNavigate();
   const { cards, ipPoints, addIpPoints, deductIpPoints, extractCard, setCards } = useCollectionStore();
   const { gachaCount, setGachaData } = useEnergyStore();
 
@@ -164,12 +162,12 @@ export const Shop: React.FC = () => {
         staggerChildren: 0.04
       }
     }
-  };
+  } as const;
 
   const itemFade = {
     hidden: { opacity: 0, y: 15 },
     show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15 } }
-  };
+  } as const;
 
   return (
     <div className="shop-page flex flex-col min-h-screen px-4 md:px-12 pt-8 pb-20 max-w-[1200px] mx-auto">
