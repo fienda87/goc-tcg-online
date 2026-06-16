@@ -90,7 +90,7 @@ export const Shop: React.FC = () => {
   };
 
   const handleBuyBoosterPack = (volume: number) => {
-    const price = 30;
+    const price = 100;
     if (ipPoints < price) return;
     setConfirmPurchase({
       type: 'item',
@@ -318,14 +318,14 @@ export const Shop: React.FC = () => {
 
               <button
                 onClick={() => handleBuyBoosterPack(1)}
-                disabled={ipPoints < 30}
+                disabled={ipPoints < 100}
                 className={`w-full py-3 rounded-xl font-[900] text-[14px] border mt-8 transition-all shop-btn ${
-                  ipPoints >= 30
+                  ipPoints >= 100
                     ? 'bg-[#d7b73b] border-[#d7b73b] text-black hover:bg-[#c4a532]'
                     : 'bg-white/5 border-white/10 text-white/30 cursor-not-allowed'
                 }`}
               >
-                🛒 30 IP
+                🛒 100 IP
               </button>
             </motion.div>
 
@@ -349,14 +349,14 @@ export const Shop: React.FC = () => {
 
               <button
                 onClick={() => handleBuyBoosterPack(2)}
-                disabled={ipPoints < 30}
+                disabled={ipPoints < 100}
                 className={`w-full py-3 rounded-xl font-[900] text-[14px] border mt-8 transition-all shop-btn ${
-                  ipPoints >= 30
+                  ipPoints >= 100
                     ? 'bg-[#d7b73b] border-[#d7b73b] text-black hover:bg-[#c4a532]'
                     : 'bg-white/5 border-white/10 text-white/30 cursor-not-allowed'
                 }`}
               >
-                🛒 30 IP
+                🛒 100 IP
               </button>
             </motion.div>
           </motion.div>
