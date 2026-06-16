@@ -249,7 +249,7 @@ export const Gacha: React.FC = () => {
   const [phase, setPhase] = useState<'pack' | 'reveal' | 'orbit' | 'done'>('pack');
   const [pulledCards, setPulledCards] = useState<CardData[]>([]);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
-  const [flippedCount, setFlippedCount] = useState(0);
+  const [, setFlippedCount] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [earnedPoints, setEarnedPoints] = useState<number>(0);
   const navigate = useNavigate();
@@ -319,12 +319,14 @@ export const Gacha: React.FC = () => {
   }, [consumeGacha, volume, pityCount, incrementPity, resetPity]);
 
   const handleCardFlip = useCallback(() => {
-    const newCount = flippedCount + 1;
-    setFlippedCount(newCount);
-    if (newCount >= pulledCards.length) {
-      setTimeout(() => setPhase('done'), 1500);
-    }
-  }, [flippedCount, pulledCards.length]);
+    setFlippedCount((prev) => {
+      const newCount = prev + 1;
+      if (newCount >= pulledCards.length) {
+        setTimeout(() => setPhase('done'), 1500);
+      }
+      return newCount;
+    });
+  }, [pulledCards.length]);
 
   const handleReset = useCallback(() => {
     setPhase('pack');
@@ -358,7 +360,7 @@ export const Gacha: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-full px-4 pt-20 pb-10 overflow-hidden relative bg-[#120F17]">
+    <div className="flex flex-col items-center justify-center min-h-screen w-full px-4 pt-20 pb-10 md:overflow-hidden overflow-y-auto relative bg-[#120F17]">
       {/* Background EvilEye Shader */}
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         <EvilEye
@@ -488,7 +490,7 @@ export const Gacha: React.FC = () => {
       <AnimatePresence>
         {phase === 'done' && (
           <motion.div
-            className="absolute bottom-6 z-50 flex flex-col items-center gap-4"
+            className="md:absolute md:bottom-6 mt-6 md:mt-0 z-50 flex flex-col items-center gap-4"
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: 'spring', damping: 15 }}
