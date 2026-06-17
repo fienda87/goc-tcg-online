@@ -241,7 +241,7 @@ const InteractivePack: React.FC<{ onOpen: () => void, volume: number }> = ({ onO
         style={{ clipPath: 'polygon(0 19.5%, 100% 19.5%, 100% 100%, 0 100%)' }}
       >
         <img 
-          src={volume === 1 ? "/images/booster pack.webp" : volume === 2 ? "/images/vol2/booster pack vol 2.webp" : "/images/vol3/booster pack vol 3.png"} 
+          src={volume === 1 ? "/images/booster pack.webp" : volume === 2 ? "/images/vol2/booster pack vol 2.webp" : "/images/vol3/booster pack vol 3.webp"} 
           alt="Booster Pack Bottom" 
           className="w-full h-full object-contain filter drop-shadow-md pointer-events-none" 
         />
@@ -261,7 +261,7 @@ const InteractivePack: React.FC<{ onOpen: () => void, volume: number }> = ({ onO
         whileHover={!isTearing ? { scale: 1.02 } : {}}
       >
         <img 
-          src={volume === 1 ? "/images/booster pack.webp" : volume === 2 ? "/images/vol2/booster pack vol 2.webp" : "/images/vol3/booster pack vol 3.png"} 
+          src={volume === 1 ? "/images/booster pack.webp" : volume === 2 ? "/images/vol2/booster pack vol 2.webp" : "/images/vol3/booster pack vol 3.webp"} 
           alt="Booster Pack Top" 
           className="w-full h-full object-contain filter drop-shadow-md" 
         />

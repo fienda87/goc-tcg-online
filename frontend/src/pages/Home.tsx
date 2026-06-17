@@ -163,7 +163,7 @@ export const Home: React.FC = () => {
             
             {/* Box Image */}
             <img 
-              src={selectedVolume === 1 ? "/images/booster box.webp" : selectedVolume === 2 ? "/images/vol2/booster box vol 2.webp" : "/images/vol3/booster box vol 3.png"} 
+              src={selectedVolume === 1 ? "/images/booster box.webp" : selectedVolume === 2 ? "/images/vol2/booster box vol 2.webp" : "/images/vol3/booster box vol 3.webp"} 
               alt={`Booster Box Vol ${selectedVolume}`} 
               className="w-full h-full object-contain relative z-10 drop-shadow-[0_15px_25px_rgba(0,0,0,0.6)]"
             />
