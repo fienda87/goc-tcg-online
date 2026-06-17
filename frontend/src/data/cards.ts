@@ -235,7 +235,7 @@ export const SLOT_CONFIG = [
   { common: 70, rare: 18, superRare: 7, ultraRare: 4.5, legendary: 0.5 }, // Slot 5 (Can yield UR/Legendary)
 ];
 
-export const PITY_CONFIG = { common: 0, rare: 0, superRare: 65, ultraRare: 25, legendary: 10 };
+export const PITY_CONFIG = { common: 0, rare: 0, superRare: 60, ultraRare: 25, legendary: 15 };
 
 export function pickRarity(config: { common: number; rare: number; superRare: number; ultraRare: number; legendary: number }): CardData['rarity'] {
   const roll = Math.random() * 100; // Use precise float for accurate decimal percentages
