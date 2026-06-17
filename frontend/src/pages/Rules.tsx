@@ -135,13 +135,10 @@ const faqItems: AccordionItem[] = [
     title: "Berapa peluang mendapatkan kartu langka?",
     content: (
       <div>
-        <p className="mb-2">Setiap kartu yang kamu dapatkan memiliki peluang kelangkaan sebagai berikut:</p>
+        <p className="mb-2">Setiap booster pack berisi 5 slot kartu dengan peluang kelangkaan sebagai berikut:</p>
         <ul className="list-none p-0 m-0">
-          <li className="mb-2">• ⚪ <strong>Common (Biasa):</strong> 60%</li>
-          <li className="mb-2">• 🔵 <strong>Rare (Langka):</strong> 25%</li>
-          <li className="mb-2">• 🟣 <strong>Super Rare (SR):</strong> 10%</li>
-          <li className="mb-2">• 🟡 <strong>Ultra Rare (UR):</strong> 4.5%</li>
-          <li>• 🔴 <strong>Exclusive Legendary:</strong> 0.5%</li>
+          <li className="mb-2">• <strong>Slot 1 s/d 4 (Maks. SR):</strong> Common (70%), Rare (20%), Super Rare (10%)</li>
+          <li>• <strong>Slot 5 (Maks. Legendary):</strong> Common (70%), Rare (18%), Super Rare (7%), Ultra Rare (4.5%), Exclusive Legendary (0.5%)</li>
         </ul>
       </div>
     ),
@@ -185,7 +182,7 @@ const faqItems: AccordionItem[] = [
         <p className="mb-2">Sistem Pity (Jaminan) membantu kamu mendapatkan kartu langka jika kurang beruntung:</p>
         <ul className="list-none p-0 m-0">
           <li className="mb-2">• Setiap kali kamu membuka booster pack tanpa mendapatkan kartu <strong>Super Rare (SR), Ultra Rare (UR), atau Exclusive Legendary</strong>, pity meter kamu akan bertambah <strong>+1</strong>.</li>
-          <li className="mb-2">• Jika pity meter mencapai <strong>20/20</strong>, maka di pembukaan pack berikutnya (gacha ke-21), Slot ke-3, ke-4, dan ke-5 kartu dijamin 100% adalah kartu tingkat tinggi dengan peluang masing-masing: <strong>SR (55%), UR (35%), atau Exclusive Legendary (10%)</strong>.</li>
+          <li className="mb-2">• Jika pity meter mencapai <strong>20/20</strong>, maka di pembukaan pack berikutnya (gacha ke-21), Slot ke-3, ke-4, dan ke-5 kartu dijamin 100% adalah kartu tingkat tinggi dengan peluang masing-masing: <strong>SR (65%), UR (25%), atau Exclusive Legendary (10%)</strong>.</li>
           <li>• Jika kamu mendapatkan kartu SR, UR, atau Exclusive Legendary secara alami di tengah jalan sebelum mencapai 20 pulls, pity meter akan <strong>langsung kembali ke 0</strong>.</li>
         </ul>
       </div>
