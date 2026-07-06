@@ -110,12 +110,13 @@ export const Shop: React.FC = () => {
     
     const { type, target, price } = confirmPurchase;
     
-    if (ipPoints < price) {
+    // Always read the freshest state from the store to avoid stale closures
+    const currentIp = useCollectionStore.getState().ipPoints;
+    
+    if (currentIp < price) {
       setConfirmPurchase(null);
       return;
     }
-
-    deductIpPoints(price);
 
     if (type === 'card') {
       const card = target as CardData;
@@ -123,9 +124,15 @@ export const Shop: React.FC = () => {
         ...card, 
         id: `shop-${Date.now()}-${Math.random()}` 
       };
-      setCards([...cards, newCardInstance]);
+      // Atomically deduct points AND add card in one setState to prevent stale cards array
+      const freshCards = useCollectionStore.getState().cards;
+      useCollectionStore.setState({
+        cards: [...freshCards, newCardInstance],
+        ipPoints: Math.max(0, currentIp - price),
+      });
     } else {
       // Booster Pack instant gacha
+      deductIpPoints(price);
       const volume = target.volume || 1;
       navigate('/gacha', { state: { volume, isShopPurchase: true } });
     }
