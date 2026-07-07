@@ -88,8 +88,8 @@ export const useTradeStore = create<TradeState>((set, get) => ({
           user_id,
           friend_id,
           status,
-          senderProfile:profiles!friends_user_id_fkey(id, username, email, friend_code),
-          receiverProfile:profiles!friends_friend_id_fkey(id, username, email, friend_code)
+          senderProfile:profiles!friends_user_id_fkey(id, username, friend_code),
+          receiverProfile:profiles!friends_friend_id_fkey(id, username, friend_code)
         `);
 
       if (error) throw error;
@@ -102,7 +102,7 @@ export const useTradeStore = create<TradeState>((set, get) => ({
           id: f.id,
           friendProfileId: profile.id,
           username: profile.username || 'Mahasiswa',
-          email: profile.email || '',
+          email: '',
           friendCode: profile.friend_code || '',
           status: f.status,
           isSender,
