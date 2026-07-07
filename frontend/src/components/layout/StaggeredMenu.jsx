@@ -1,7 +1,10 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { Link } from 'react-router-dom';
 import './StaggeredMenu.css';
+import { useUserStore } from '../../store/userStore';
+import { useCollectionStore } from '../../store/collectionStore';
+import { useMailboxStore } from '../../store/mailboxStore';
 
 export const StaggeredMenu = ({
   position = 'right',
@@ -32,6 +35,26 @@ export const StaggeredMenu = ({
   const textInnerRef = useRef(null);
   const textWrapRef = useRef(null);
   const [textLines, setTextLines] = useState(['Menu', 'Close']);
+
+  const [profileOpen, setProfileOpen] = useState(false);
+  const user = useUserStore((s) => s.user);
+  const logout = useUserStore((s) => s.logout);
+  const ipPoints = useCollectionStore((s) => s.ipPoints);
+  const cards = useCollectionStore((s) => s.cards);
+  const unreadCount = useMailboxStore((s) => s.getUnreadCount());
+  
+  const profileContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (!profileOpen) return;
+    const handleProfileClickOutside = (e) => {
+      if (profileContainerRef.current && !profileContainerRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleProfileClickOutside);
+    return () => document.removeEventListener('mousedown', handleProfileClickOutside);
+  }, [profileOpen]);
 
   const openTlRef = useRef(null);
   const closeTweenRef = useRef(null);
@@ -375,29 +398,86 @@ export const StaggeredMenu = ({
             <img src="/images/logo.webp" alt="God of College" className="w-[80px] md:w-[100px] h-auto object-contain" />
           </Link>
         </div>
-        <button
-          ref={toggleBtnRef}
-          className="sm-toggle"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          aria-controls="staggered-menu-panel"
-          onClick={toggleMenu}
-          type="button"
-        >
-          <span ref={textWrapRef} className="sm-toggle-textWrap" aria-hidden="true">
-            <span ref={textInnerRef} className="sm-toggle-textInner">
-              {textLines.map((l, i) => (
-                <span className="sm-toggle-line" key={i}>
-                  {l}
+        
+        <div className="flex items-center gap-4">
+          {/* User Profile display */}
+          {user ? (
+            <div ref={profileContainerRef} className="sm-profile-container">
+              <button 
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="sm-profile-trigger"
+                type="button"
+              >
+                <div className="sm-profile-avatar">
+                  {user.user_metadata?.username?.charAt(0) || user.email?.charAt(0) || 'U'}
+                </div>
+                <span className="sm-profile-username">
+                  {user.user_metadata?.username || user.email?.split('@')[0]}
                 </span>
-              ))}
+              </button>
+              
+              {profileOpen && (
+                <div className="sm-profile-dropdown">
+                  <div className="sm-profile-details">
+                    <p className="sm-profile-details-name">
+                      {user.user_metadata?.username || 'Mahasiswa'}
+                    </p>
+                    <p className="sm-profile-details-email">{user.email}</p>
+                  </div>
+                  
+                  <div className="sm-profile-stat">
+                    <span>Koleksi:</span>
+                    <span className="sm-profile-stat-val">{cards.length} Kartu</span>
+                  </div>
+                  
+                  <div className="sm-profile-stat">
+                    <span>IP Points:</span>
+                    <span className="sm-profile-stat-val">{ipPoints} IP</span>
+                  </div>
+                  
+                  <button 
+                    onClick={async () => {
+                      setProfileOpen(false);
+                      await logout();
+                    }}
+                    className="sm-profile-action-btn sm-profile-btn-danger"
+                    type="button"
+                  >
+                    KELUAR AKUN
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link to="/login" className="sm-profile-guest-btn">
+              <span>MASUK</span>
+            </Link>
+          )}
+
+          <button
+            ref={toggleBtnRef}
+            className="sm-toggle"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="staggered-menu-panel"
+            onClick={toggleMenu}
+            type="button"
+          >
+            <span ref={textWrapRef} className="sm-toggle-textWrap" aria-hidden="true">
+              <span ref={textInnerRef} className="sm-toggle-textInner">
+                {textLines.map((l, i) => (
+                  <span className="sm-toggle-line" key={i}>
+                    {l}
+                  </span>
+                ))}
+              </span>
             </span>
-          </span>
-          <span ref={iconRef} className="sm-icon" aria-hidden="true">
-            <span ref={plusHRef} className="sm-icon-line" />
-            <span ref={plusVRef} className="sm-icon-line sm-icon-line-v" />
-          </span>
-        </button>
+            <span ref={iconRef} className="sm-icon" aria-hidden="true">
+              <span ref={plusHRef} className="sm-icon-line" />
+              <span ref={plusVRef} className="sm-icon-line sm-icon-line-v" />
+            </span>
+          </button>
+        </div>
       </header>
 
       <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open}>
@@ -407,7 +487,14 @@ export const StaggeredMenu = ({
               items.map((it, idx) => (
                 <li className="sm-panel-itemWrap" key={it.label + idx}>
                   <Link className="sm-panel-item" to={it.link} onClick={closeMenu} aria-label={it.ariaLabel} data-index={idx + 1}>
-                    <span className="sm-panel-itemLabel">{it.label}</span>
+                    <span className="sm-panel-itemLabel">
+                      {it.label}
+                      {it.label === 'Mailbox' && unreadCount > 0 && (
+                        <span className="ml-3 px-2 py-0.5 bg-red-600 text-white text-[11px] font-black rounded-full animate-pulse shadow-[0_0_12px_rgba(220,38,38,0.5)]">
+                          {unreadCount}
+                        </span>
+                      )}
+                    </span>
                   </Link>
                 </li>
               ))

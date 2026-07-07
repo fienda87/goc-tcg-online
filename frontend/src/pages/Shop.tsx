@@ -31,7 +31,7 @@ const DUPLICATE_POINTS: Record<string, number> = {
 
 export const Shop: React.FC = () => {
   const navigate = useNavigate();
-  const { cards, ipPoints, addIpPoints, deductIpPoints, extractCard, setCards } = useCollectionStore();
+  const { cards, ipPoints, deductIpPoints, extractCard, buyCard, extractAllCards } = useCollectionStore();
 
   const [activeTab, setActiveTab] = useState<'cards' | 'items' | 'recycle'>('cards');
   const [selectedRarityFilter, setSelectedRarityFilter] = useState<string>('All');
@@ -105,7 +105,7 @@ export const Shop: React.FC = () => {
     });
   };
 
-  const executePurchase = () => {
+  const executePurchase = async () => {
     if (!confirmPurchase) return;
     
     const { type, target, price } = confirmPurchase;
@@ -120,19 +120,10 @@ export const Shop: React.FC = () => {
 
     if (type === 'card') {
       const card = target as CardData;
-      const newCardInstance = { 
-        ...card, 
-        id: `shop-${Date.now()}-${Math.random()}` 
-      };
-      // Atomically deduct points AND add card in one setState to prevent stale cards array
-      const freshCards = useCollectionStore.getState().cards;
-      useCollectionStore.setState({
-        cards: [...freshCards, newCardInstance],
-        ipPoints: Math.max(0, currentIp - price),
-      });
+      await buyCard(card, price);
     } else {
-      // Booster Pack instant gacha
-      deductIpPoints(price);
+      // Booster Pack gacha
+      await deductIpPoints(price);
       const volume = target.volume || 1;
       navigate('/gacha', { state: { volume, isShopPurchase: true } });
     }
@@ -150,22 +141,7 @@ export const Shop: React.FC = () => {
 
   const executeExtractAll = () => {
     if (duplicateList.length === 0) return;
-    
-    // Create new list of cards retaining only 1 instance of duplicates
-    const counts: Record<string, number> = {};
-    const newCards: any[] = [];
-    
-    cards.forEach((c) => {
-      if (!counts[c.name]) {
-        counts[c.name] = 1;
-        newCards.push(c);
-      } else {
-        // Just bypass duplicates, they are recycled
-      }
-    });
-
-    setCards(newCards);
-    addIpPoints(totalExtractablePoints);
+    extractAllCards(totalExtractablePoints);
   };
 
   const staggerContainer = {
@@ -184,7 +160,7 @@ export const Shop: React.FC = () => {
   } as const;
 
   return (
-    <div className="shop-page flex flex-col min-h-screen px-4 md:px-12 pt-8 pb-20 max-w-[1200px] mx-auto">
+    <div className="shop-page flex flex-col min-h-screen px-4 md:px-12 pt-32 md:pt-36 pb-20 max-w-[1200px] mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>

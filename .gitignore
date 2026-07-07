@@ -1,0 +1,13 @@
+# Local environment variables
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# Agent/Antigravity system files
+.agents/
+.gemini/
+skills-lock.json
+
+# Node modules and build output in root if any
+node_modules/
+dist/

@@ -7,6 +7,9 @@ export const Navbar: React.FC = () => {
     { label: 'Koleksi', ariaLabel: 'View collection', link: '/collection' },
     { label: 'Binder', ariaLabel: 'View binder', link: '/binders' },
     { label: 'Shop', ariaLabel: 'Go to shop page', link: '/shop' },
+    { label: 'Trade', ariaLabel: 'Trade cards with friends', link: '/trade' },
+    { label: 'Mailbox', ariaLabel: 'View messages and rewards', link: '/mailbox' },
+    { label: 'Achievement', ariaLabel: 'View unlocked achievements', link: '/achievements' },
     { label: 'Aturan', ariaLabel: 'Read rules', link: '/rules' },
   ];
 

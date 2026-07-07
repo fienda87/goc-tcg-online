@@ -95,7 +95,7 @@ export const Home: React.FC = () => {
         />
       </div>
 
-      <div className="flex flex-col items-center max-w-[480px] mx-auto pt-10 px-4 relative z-10 flex-1">
+      <div className="flex flex-col items-center max-w-[480px] mx-auto pt-32 md:pt-36 px-4 relative z-10 flex-1">
         {/* Hero */}
         <motion.h1 
           className="text-[36px] sm:text-[45px] md:text-[65px] leading-[0.98] text-center text-white m-0 font-[800] tracking-tight mt-4"

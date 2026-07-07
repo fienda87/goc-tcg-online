@@ -278,7 +278,7 @@ const statusEffects: AccordionItem[] = [
 
 export const Rules: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen px-4 md:px-12 pt-8 pb-20 max-w-[800px] mx-auto">
+    <div className="flex flex-col min-h-screen px-4 md:px-12 pt-32 md:pt-36 pb-20 max-w-[800px] mx-auto">
       <h1 className="text-[55px] md:text-[65px] text-white leading-[1] m-0 mb-4 font-[800]">ATURAN MAIN.</h1>
       <p className="text-[20px] font-[800] text-white/60 m-0 mb-12">Semua yang perlu kamu tahu.</p>
 

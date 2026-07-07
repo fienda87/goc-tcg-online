@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { CardData } from '../data/cards';
 import { BINDER_COLORS } from '../constants/binderColors';
 import { ALL_CARDS } from '../data/cards';
+import { supabase } from '../lib/supabase';
 
 export interface BinderSlot {
   slotPosition: number;
@@ -59,18 +60,135 @@ export const useBinderStore = create<BinderStore>()(
       currentBinder: null,
 
       fetchBinders: async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return; // Guest mode - fallback to persisted local storage
+
         set({ loading: true, error: null });
-        set({ loading: false });
+        try {
+          // Fetch all binders
+          const { data: dbBinders, error: binderError } = await supabase
+            .from('binders')
+            .select('*')
+            .order('created_at', { ascending: true });
+
+          if (binderError) throw binderError;
+
+          const detailedBinders: BinderDetail[] = [];
+
+          for (const b of dbBinders || []) {
+            // Fetch slots for this binder
+            const { data: dbSlots, error: slotError } = await supabase
+              .from('binder_slots')
+              .select('slot_position, card_id')
+              .eq('binder_id', b.id);
+
+            if (slotError) throw slotError;
+
+            // Build slots array of size 24
+            const slots: BinderSlot[] = Array.from({ length: 24 }, (_, i) => ({
+              slotPosition: i,
+              card: null,
+            }));
+
+            (dbSlots || []).forEach((s) => {
+              if (s.slot_position >= 0 && s.slot_position < 24 && s.card_id) {
+                const card = ALL_CARDS.find((c) => c.id === s.card_id);
+                if (card) {
+                  slots[s.slot_position] = {
+                    slotPosition: s.slot_position,
+                    card,
+                  };
+                }
+              }
+            });
+
+            detailedBinders.push({
+              id: b.id,
+              name: b.name,
+              colorId: b.color_id,
+              colorHex: b.color_hex,
+              colorDisplay: b.color_display,
+              cardCount: slots.filter((s) => s.card !== null).length,
+              updatedAt: b.updated_at,
+              slots,
+            });
+          }
+
+          set({ binders: detailedBinders, loading: false });
+        } catch (err: any) {
+          set({ error: err.message || 'Gagal memuat binder', loading: false });
+        }
       },
 
       fetchBinderDetail: async (binderId: string) => {
-        set({ loading: true, error: null });
-        const binder = get().binders.find((b) => b.id === binderId);
-        if (!binder) {
-          set({ error: 'Binder tidak ditemukan', loading: false, currentBinder: null });
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        // If guest, find in local state
+        if (!user) {
+          set({ loading: true, error: null });
+          const binder = get().binders.find((b) => b.id === binderId);
+          if (!binder) {
+            set({ error: 'Binder tidak ditemukan', loading: false, currentBinder: null });
+            return;
+          }
+          set({ currentBinder: binder, loading: false });
           return;
         }
-        set({ currentBinder: binder, loading: false });
+
+        // Logged-in: fetch from Supabase
+        set({ loading: true, error: null });
+        try {
+          const { data: b, error: binderError } = await supabase
+            .from('binders')
+            .select('*')
+            .eq('id', binderId)
+            .single();
+
+          if (binderError) throw binderError;
+
+          const { data: dbSlots, error: slotError } = await supabase
+            .from('binder_slots')
+            .select('slot_position, card_id')
+            .eq('binder_id', b.id);
+
+          if (slotError) throw slotError;
+
+          const slots: BinderSlot[] = Array.from({ length: 24 }, (_, i) => ({
+            slotPosition: i,
+            card: null,
+          }));
+
+          (dbSlots || []).forEach((s) => {
+            if (s.slot_position >= 0 && s.slot_position < 24 && s.card_id) {
+              const card = ALL_CARDS.find((c) => c.id === s.card_id);
+              if (card) {
+                slots[s.slot_position] = {
+                  slotPosition: s.slot_position,
+                  card,
+                };
+              }
+            }
+          });
+
+          const binderDetail: BinderDetail = {
+            id: b.id,
+            name: b.name,
+            colorId: b.color_id,
+            colorHex: b.color_hex,
+            colorDisplay: b.color_display,
+            cardCount: slots.filter((s) => s.card !== null).length,
+            updatedAt: b.updated_at,
+            slots,
+          };
+
+          set({
+            currentBinder: binderDetail,
+            binders: get().binders.map((x) => (x.id === binderId ? binderDetail : x)),
+            loading: false,
+          });
+        } catch (err: any) {
+          set({ error: err.message || 'Gagal memuat detail binder', loading: false, currentBinder: null });
+        }
       },
 
       createBinder: async (name: string, colorId: string) => {
@@ -97,24 +215,59 @@ export const useBinderStore = create<BinderStore>()(
           throw new Error('Warna binder tidak valid');
         }
 
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+          // Guest mode
+          const newBinder: BinderDetail = {
+            id: generateId(),
+            name: cleanName,
+            colorId: color.id,
+            colorHex: color.hex,
+            colorDisplay: color.display,
+            cardCount: 0,
+            updatedAt: new Date().toISOString(),
+            slots: Array.from({ length: 24 }, (_, i) => ({
+              slotPosition: i,
+              card: null,
+            })),
+          };
+
+          set({ binders: [...state.binders, newBinder] });
+          localStorage.setItem('goc-guest-dirty', 'true');
+          return newBinder;
+        }
+
+        // Logged-in: Save to Supabase
+        const { data: dbBinder, error: binderError } = await supabase
+          .from('binders')
+          .insert({
+            user_id: user.id,
+            name: cleanName,
+            color_id: color.id,
+            color_hex: color.hex,
+            color_display: color.display,
+          })
+          .select('*')
+          .single();
+
+        if (binderError) throw binderError;
+
         const newBinder: BinderDetail = {
-          id: generateId(),
-          name: cleanName,
-          colorId: color.id,
-          colorHex: color.hex,
-          colorDisplay: color.display,
+          id: dbBinder.id,
+          name: dbBinder.name,
+          colorId: dbBinder.color_id,
+          colorHex: dbBinder.color_hex,
+          colorDisplay: dbBinder.color_display,
           cardCount: 0,
-          updatedAt: new Date().toISOString(),
+          updatedAt: dbBinder.updated_at,
           slots: Array.from({ length: 24 }, (_, i) => ({
             slotPosition: i,
             card: null,
           })),
         };
 
-        set({
-          binders: [...state.binders, newBinder],
-        });
-
+        set({ binders: [...state.binders, newBinder] });
         return newBinder;
       },
 
@@ -155,6 +308,25 @@ export const useBinderStore = create<BinderStore>()(
           updatedColor = color;
         }
 
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+          const { error } = await supabase
+            .from('binders')
+            .update({
+              name: updatedName,
+              color_id: updatedColor.id,
+              color_hex: updatedColor.hex,
+              color_display: updatedColor.display,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', binderId);
+
+          if (error) throw error;
+        } else {
+          localStorage.setItem('goc-guest-dirty', 'true');
+        }
+
         const updatedBinder: BinderDetail = {
           ...binder,
           name: updatedName,
@@ -173,6 +345,19 @@ export const useBinderStore = create<BinderStore>()(
       deleteBinder: async (binderId: string) => {
         set({ error: null });
         const state = get();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+          const { error } = await supabase
+            .from('binders')
+            .delete()
+            .eq('id', binderId);
+
+          if (error) throw error;
+        } else {
+          localStorage.setItem('goc-guest-dirty', 'true');
+        }
+
         set({
           binders: state.binders.filter((b) => b.id !== binderId),
           currentBinder: state.currentBinder?.id === binderId ? null : state.currentBinder,
@@ -216,6 +401,24 @@ export const useBinderStore = create<BinderStore>()(
           }
         }
 
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+          const { error } = await supabase
+            .from('binder_slots')
+            .upsert({
+              binder_id: binderId,
+              slot_position: targetPosition,
+              card_id: cardId,
+            }, {
+              onConflict: 'binder_id,slot_position'
+            });
+
+          if (error) throw error;
+        } else {
+          localStorage.setItem('goc-guest-dirty', 'true');
+        }
+
         newSlots[targetPosition] = {
           slotPosition: targetPosition,
           card: card,
@@ -251,6 +454,21 @@ export const useBinderStore = create<BinderStore>()(
           return;
         }
 
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+          // Delete from database
+          const { error } = await supabase
+            .from('binder_slots')
+            .delete()
+            .eq('binder_id', binderId)
+            .eq('slot_position', slotPosition);
+
+          if (error) throw error;
+        } else {
+          localStorage.setItem('goc-guest-dirty', 'true');
+        }
+
         newSlots[slotPosition] = {
           slotPosition,
           card: null,
@@ -275,6 +493,37 @@ export const useBinderStore = create<BinderStore>()(
         const binder = state.binders.find((b) => b.id === binderId);
         if (!binder) {
           throw new Error('Binder tidak ditemukan');
+        }
+
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+          // First delete all existing slots in database for this binder
+          const { error: deleteError } = await supabase
+            .from('binder_slots')
+            .delete()
+            .eq('binder_id', binderId);
+
+          if (deleteError) throw deleteError;
+
+          // Insert new slots payload (excluding empty cards)
+          const insertPayload = newSlotsPayload
+            .filter((item) => item.cardId)
+            .map((item) => ({
+              binder_id: binderId,
+              slot_position: item.slotPosition,
+              card_id: item.cardId,
+            }));
+
+          if (insertPayload.length > 0) {
+            const { error: insertError } = await supabase
+              .from('binder_slots')
+              .insert(insertPayload);
+
+            if (insertError) throw insertError;
+          }
+        } else {
+          localStorage.setItem('goc-guest-dirty', 'true');
         }
 
         const reconstructedSlots: BinderSlot[] = Array.from({ length: 24 }, (_, i) => ({

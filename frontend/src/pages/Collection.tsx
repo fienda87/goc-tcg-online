@@ -98,7 +98,7 @@ export const Collection: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen px-4 md:px-12 pt-8 pb-20 overflow-x-hidden max-w-[1200px] mx-auto">
+    <div className="flex flex-col min-h-screen px-4 md:px-12 pt-32 md:pt-36 pb-20 overflow-x-hidden max-w-[1200px] mx-auto">
       {/* Title & Mode Toggle */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-6">
         <div>

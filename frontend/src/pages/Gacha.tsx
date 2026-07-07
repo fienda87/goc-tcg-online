@@ -372,10 +372,7 @@ export const Gacha: React.FC = () => {
           }
         });
         
-        useCollectionStore.getState().setCards([...existingCards, ...cards]);
-        if (calculatedPoints > 0) {
-          useCollectionStore.getState().addIpPoints(calculatedPoints);
-        }
+        useCollectionStore.getState().addPulledCards(cards, calculatedPoints);
         setEarnedPoints(calculatedPoints);
       });
     }, 150);
@@ -431,7 +428,7 @@ export const Gacha: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-full px-4 pt-20 pb-10 md:overflow-hidden overflow-y-auto relative bg-[#120F17]">
+    <div className="flex flex-col items-center justify-center min-h-screen w-full px-4 pt-32 md:pt-36 pb-10 md:overflow-hidden overflow-y-auto relative bg-[#120F17]">
       {/* Background EvilEye Shader */}
       <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
         <EvilEye
