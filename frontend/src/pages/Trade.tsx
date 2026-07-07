@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Copy, Plus, Check, X, ArrowLeftRight, User, Trash2, Clock, History, AlertCircle } from 'lucide-react';
+import { Plus, Check, X, ArrowLeftRight, User, Trash2, Clock, History, AlertCircle } from 'lucide-react';
 import { useTradeStore, type Friend } from '../store/tradeStore';
 import { useUserStore } from '../store/userStore';
 import { useCollectionStore } from '../store/collectionStore';
@@ -17,7 +17,6 @@ export const Trade: React.FC = () => {
   const {
     friends,
     trades,
-    friendCode,
     loading,
     error,
     fetchFriendCode,
@@ -36,7 +35,6 @@ export const Trade: React.FC = () => {
   // Local state
   const [activeTab, setActiveTab] = useState<'friends' | 'trades' | 'history'>('friends');
   const [friendCodeInput, setFriendCodeInput] = useState('');
-  const [copied, setCopied] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -63,13 +61,7 @@ export const Trade: React.FC = () => {
     }
   }, [error]);
 
-  const handleCopyCode = () => {
-    if (friendCode) {
-      navigator.clipboard.writeText(friendCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
+
 
   const handleAddFriend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -486,34 +478,6 @@ export const Trade: React.FC = () => {
                 <Plus className="w-4 h-4 stroke-[3]" /> TAMBAH
               </button>
             </form>
-
-            {/* Display Own Friend Code Here */}
-            {friendCode && (
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="text-[11px] font-black text-white/40 leading-none">KODE TEMAN ANDA</span>
-                  <span className="text-[18px] font-black text-[#d7b73b] mt-1.5 tracking-wider">{friendCode}</span>
-                </div>
-                <button
-                  onClick={handleCopyCode}
-                  className={`px-4 py-2 text-xs font-black rounded-full border cursor-pointer flex items-center gap-1.5 transition-all ${
-                    copied
-                      ? 'bg-green-600 border-green-600 text-white'
-                      : 'bg-white/5 border-white/15 text-white/70 hover:bg-white/10'
-                  }`}
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-3.5 h-3.5" /> TERSALIN
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5" /> SALIN KODE
-                    </>
-                  )}
-                </button>
-              </div>
-            )}
           </div>
 
           {/* Friends list */}

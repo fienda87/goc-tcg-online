@@ -5,6 +5,7 @@ import './StaggeredMenu.css';
 import { useUserStore } from '../../store/userStore';
 import { useCollectionStore } from '../../store/collectionStore';
 import { useMailboxStore } from '../../store/mailboxStore';
+import { useTradeStore } from '../../store/tradeStore';
 
 export const StaggeredMenu = ({
   position = 'right',
@@ -37,11 +38,21 @@ export const StaggeredMenu = ({
   const [textLines, setTextLines] = useState(['Menu', 'Close']);
 
   const [profileOpen, setProfileOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const user = useUserStore((s) => s.user);
   const logout = useUserStore((s) => s.logout);
   const ipPoints = useCollectionStore((s) => s.ipPoints);
   const cards = useCollectionStore((s) => s.cards);
   const unreadCount = useMailboxStore((s) => s.getUnreadCount());
+  
+  const friendCode = useTradeStore((s) => s.friendCode);
+  const fetchFriendCode = useTradeStore((s) => s.fetchFriendCode);
+
+  useEffect(() => {
+    if (user) {
+      fetchFriendCode();
+    }
+  }, [user, fetchFriendCode]);
   
   const profileContainerRef = useRef(null);
 
@@ -434,6 +445,36 @@ export const StaggeredMenu = ({
                     <span>IP Points:</span>
                     <span className="sm-profile-stat-val">{ipPoints} IP</span>
                   </div>
+                  
+                  {friendCode && (
+                    <div className="sm-profile-friend-code">
+                      <span className="sm-profile-friend-code-header">Kode Teman Anda</span>
+                      <div className="sm-profile-friend-code-body">
+                        <span className="sm-profile-friend-code-val">{friendCode}</span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(friendCode);
+                            setCopied(true);
+                            setTimeout(() => setCopied(false), 2000);
+                          }}
+                          className={`sm-profile-friend-code-copy ${copied ? 'copied' : ''}`}
+                          type="button"
+                        >
+                          {copied ? (
+                            <>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                              <span>Tersalin</span>
+                            </>
+                          ) : (
+                            <>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                              <span>Salin</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
                   
                   <button 
                     onClick={async () => {

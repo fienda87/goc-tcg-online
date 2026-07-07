@@ -513,3 +513,62 @@
   background: white;
   color: black;
 }
+
+.sm-profile-friend-code {
+  padding: 12px;
+  margin: 4px 0 12px 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sm-profile-friend-code-header {
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.sm-profile-friend-code-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sm-profile-friend-code-val {
+  font-size: 14px;
+  font-weight: 800;
+  color: #d7b73b;
+  font-family: monospace;
+}
+
+.sm-profile-friend-code-copy {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.sm-profile-friend-code-copy:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.sm-profile-friend-code-copy.copied {
+  background: #16a34a;
+  border-color: #16a34a;
+}
