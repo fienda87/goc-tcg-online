@@ -81,13 +81,13 @@ export const NewPlayerLoginModal: React.FC = () => {
   const currentClaimDay = newPlayerStreakDay + 1 > 7 ? 7 : newPlayerStreakDay + 1;
 
   return (
-    <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-[150] flex items-start md:items-center justify-center p-4 bg-black/90 backdrop-blur-md overflow-y-auto">
       <AnimatePresence mode="wait">
         {/* Step 1: Claim Success Screen */}
         {successReward ? (
           <motion.div
             key="success-screen"
-            className="w-full max-w-md bg-zinc-950 border-2 border-[#d7b73b] rounded-3xl p-8 text-center shadow-[0_0_50px_rgba(215,183,59,0.25)] flex flex-col items-center justify-center"
+            className="w-full max-w-md bg-zinc-950 border-2 border-[#d7b73b] rounded-3xl p-8 text-center shadow-[0_0_50px_rgba(215,183,59,0.25)] flex flex-col items-center justify-center my-auto"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
@@ -133,7 +133,7 @@ export const NewPlayerLoginModal: React.FC = () => {
           /* Step 2: Legendary Card Picker Screen (Day 7) */
           <motion.div
             key="legendary-picker"
-            className="w-full max-w-4xl bg-zinc-950 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative"
+            className="w-full max-w-4xl bg-zinc-950 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative my-auto"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
@@ -216,7 +216,7 @@ export const NewPlayerLoginModal: React.FC = () => {
           /* Step 3: Calendar Calendar View */
           <motion.div
             key="calendar-view"
-            className="w-full max-w-xl bg-zinc-950 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative text-center"
+            className="w-full max-w-xl bg-zinc-950 border border-white/10 rounded-3xl p-5 md:p-6 shadow-2xl relative text-center my-auto"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
@@ -224,12 +224,12 @@ export const NewPlayerLoginModal: React.FC = () => {
             {/* Background Glow */}
             <div className="absolute top-[-30px] left-1/2 transform -translate-x-1/2 w-48 h-48 bg-[#d7b73b]/10 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="mb-6 flex flex-col items-center">
-              <div className="px-3 py-1 bg-[#d7b73b]/10 border border-[#d7b73b]/30 rounded-full flex items-center gap-1.5 text-xs font-black text-[#d7b73b] tracking-wider uppercase mb-3">
-                <Gift className="w-3.5 h-3.5" /> EXCLUSIVE WELCOME REWARD
+            <div className="mb-4 flex flex-col items-center">
+              <div className="px-3 py-1 bg-[#d7b73b]/10 border border-[#d7b73b]/30 rounded-full flex items-center gap-1.5 text-[10px] font-black text-[#d7b73b] tracking-wider uppercase mb-2">
+                <Gift className="w-3 h-3" /> EXCLUSIVE WELCOME REWARD
               </div>
-              <h2 className="text-3xl font-black text-white m-0">LOGIN PEMAIN BARU</h2>
-              <p className="text-white/50 text-sm font-semibold mt-2">
+              <h2 className="text-2xl font-black text-white m-0">LOGIN PEMAIN BARU</h2>
+              <p className="text-white/50 text-xs font-semibold mt-1">
                 Hadiah eksklusif 7 hari pertama untuk mempercepat langkah Anda menyusun deck legendaris.
               </p>
             </div>
@@ -243,8 +243,8 @@ export const NewPlayerLoginModal: React.FC = () => {
                 return (
                   <div
                     key={reward.day}
-                    className={`relative aspect-square rounded-2xl border flex flex-col items-center justify-center p-2 transition-all overflow-hidden ${
-                      reward.day === 7 ? 'col-span-2 aspect-auto py-4' : ''
+                    className={`relative rounded-xl border flex flex-col items-center justify-center p-1.5 transition-all overflow-hidden ${
+                      reward.day === 7 ? 'col-span-2 py-2' : ''
                     } ${
                       isClaimed
                         ? 'bg-green-950/20 border-green-600/30 text-green-500'
@@ -253,25 +253,25 @@ export const NewPlayerLoginModal: React.FC = () => {
                         : 'bg-zinc-900/60 border-white/5 text-white/40'
                     }`}
                   >
-                    <span className="text-[10px] font-black tracking-wider uppercase mb-1">HARI {reward.day}</span>
+                    <span className="text-[9px] font-black tracking-wider uppercase mb-0.5">HARI {reward.day}</span>
 
                     {/* Reward Icon */}
                     {isClaimed ? (
-                      <div className="w-7 h-7 rounded-full bg-green-900/30 border border-green-600/40 flex items-center justify-center">
-                        <Check className="w-4 h-4 text-green-500 stroke-[3]" />
+                      <div className="w-5 h-5 rounded-full bg-green-900/30 border border-green-600/40 flex items-center justify-center">
+                        <Check className="w-3 h-3 text-green-500 stroke-[3]" />
                       </div>
                     ) : reward.day === 7 ? (
-                      <Star className={`w-8 h-8 ${isCurrent ? 'text-[#fe2f2f] animate-pulse' : 'text-white/20'}`} />
+                      <Star className={`w-5 h-5 ${isCurrent ? 'text-[#fe2f2f] animate-pulse' : 'text-white/20'}`} />
                     ) : (
-                      <Gift className={`w-6 h-6 ${isCurrent ? 'text-[#d7b73b]' : 'text-white/20'}`} />
+                      <Gift className={`w-5 h-5 ${isCurrent ? 'text-[#d7b73b]' : 'text-white/20'}`} />
                     )}
 
-                    <span className="text-[11px] font-black mt-2 text-center truncate w-full px-1">{reward.label}</span>
+                    <span className="text-[10px] font-black mt-1 text-center truncate w-full px-1">{reward.label}</span>
 
                     {/* Current tag overlay */}
                     {isCurrent && (
-                      <div className="absolute top-1 right-1">
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#d7b73b] animate-ping" />
+                      <div className="absolute top-0.5 right-0.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#d7b73b] animate-ping" />
                       </div>
                     )}
                   </div>
@@ -280,29 +280,29 @@ export const NewPlayerLoginModal: React.FC = () => {
             </div>
 
             {/* Current Reward Message Info */}
-            <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-left mb-6 flex gap-3.5 items-center">
-              <div className="w-10 h-10 bg-[#d7b73b]/10 border border-[#d7b73b]/30 rounded-xl flex items-center justify-center shrink-0">
-                <Gift className="w-5 h-5 text-[#d7b73b]" />
+            <div className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-left mb-4 flex gap-3 items-center">
+              <div className="w-8 h-8 bg-[#d7b73b]/10 border border-[#d7b73b]/30 rounded-lg flex items-center justify-center shrink-0">
+                <Gift className="w-4 h-4 text-[#d7b73b]" />
               </div>
               <div>
-                <div className="text-xs font-black text-white/40 uppercase">KLAIM HARI INI (HARI {currentClaimDay})</div>
-                <div className="text-[15px] font-bold text-white mt-0.5">{NEW_PLAYER_REWARDS[currentClaimDay - 1].label}</div>
-                <div className="text-xs text-white/50 mt-0.5">{NEW_PLAYER_REWARDS[currentClaimDay - 1].description}</div>
+                <div className="text-[9px] font-black text-white/40 uppercase">KLAIM HARI INI (HARI {currentClaimDay})</div>
+                <div className="text-sm font-bold text-white mt-0.5">{NEW_PLAYER_REWARDS[currentClaimDay - 1].label}</div>
+                <div className="text-[11px] text-white/50 mt-0.5">{NEW_PLAYER_REWARDS[currentClaimDay - 1].description}</div>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <button
                 onClick={() => setIsOpen(false)}
-                className="px-5 py-4 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white font-extrabold rounded-full transition-colors cursor-pointer text-sm border border-white/10"
+                className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white font-extrabold rounded-full transition-colors cursor-pointer text-xs border border-white/10"
               >
                 NANTI SAJA
               </button>
               <button
                 onClick={handleClaim}
                 disabled={loading}
-                className="flex-1 py-4 bg-[#d7b73b] hover:bg-[#c0a232] text-black font-black rounded-full transition-all cursor-pointer text-sm shadow-xl shadow-[#d7b73b]/10 flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 bg-[#d7b73b] hover:bg-[#c0a232] text-black font-black rounded-full transition-all cursor-pointer text-xs shadow-xl shadow-[#d7b73b]/10 flex items-center justify-center gap-1.5"
               >
                 {loading ? 'MEMPROSES...' : 'KLAIM HADIAH SEKARANG!'}
               </button>
