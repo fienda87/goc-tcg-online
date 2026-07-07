@@ -58,11 +58,13 @@ export const useUserStore = create<UserState>((set) => ({
       const { useAchievementStore } = await import('./achievementStore');
       const { useMailboxStore } = await import('./mailboxStore');
       const { useDailyLoginStore } = await import('./dailyLoginStore');
+      const { useNewPlayerLoginStore } = await import('./newPlayerLoginStore');
 
       useTradeStore.setState({ friends: [], trades: [], friendCode: null, error: null, loading: false });
       useAchievementStore.setState({ unlockedKeys: [], error: null, loading: false });
       useMailboxStore.setState({ messages: [], error: null, loading: false });
       useDailyLoginStore.setState({ loginStreakDay: 0, lastLoginClaim: null, claimableToday: false, error: null, loading: false });
+      useNewPlayerLoginStore.setState({ newPlayerStreakDay: 0, lastNewPlayerClaim: null, isNewPlayerEligible: false, claimableToday: false, error: null, loading: false });
 
       // Clear local storage keys to ensure clean guest state
       localStorage.removeItem('goc-collection');

@@ -11,6 +11,8 @@ import { useBinderStore } from './store/binderStore';
 import { useMailboxStore } from './store/mailboxStore';
 import { useAchievementStore } from './store/achievementStore';
 import { DailyLoginModal } from './components/modals/DailyLoginModal';
+import { NewPlayerLoginModal } from './components/modals/NewPlayerLoginModal';
+import { useNewPlayerLoginStore } from './store/newPlayerLoginStore';
 import { Toast } from './components/ui/Toast';
 
 interface ToastData {
@@ -39,6 +41,7 @@ function App() {
         await fetchBinders();
         await useMailboxStore.getState().fetchMessages();
         await useAchievementStore.getState().fetchAchievements();
+        await useNewPlayerLoginStore.getState().fetchNewPlayerStreak();
       };
       syncAll();
     }
@@ -107,6 +110,7 @@ function App() {
             <AnimatedRoutes />
           </main>
           <DailyLoginModal />
+          <NewPlayerLoginModal />
           {activeToast && (
             <Toast
               message={activeToast.message}
