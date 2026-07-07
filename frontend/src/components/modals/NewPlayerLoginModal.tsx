@@ -14,10 +14,11 @@ export const NewPlayerLoginModal: React.FC = () => {
     isNewPlayerEligible,
     fetchNewPlayerStreak,
     claimNewPlayerReward,
-    loading
+    loading,
+    isOpen,
+    setIsOpen
   } = useNewPlayerLoginStore();
 
-  const [isOpen, setIsOpen] = useState(false);
   const [showLegendaryPicker, setShowLegendaryPicker] = useState(false);
   const [selectedLegendaryId, setSelectedLegendaryId] = useState<string | null>(null);
   const [successReward, setSuccessReward] = useState<any | null>(null);

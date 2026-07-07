@@ -6,6 +6,8 @@ import { useUserStore } from '../../store/userStore';
 import { useCollectionStore } from '../../store/collectionStore';
 import { useMailboxStore } from '../../store/mailboxStore';
 import { useTradeStore } from '../../store/tradeStore';
+import { useDailyLoginStore } from '../../store/dailyLoginStore';
+import { useNewPlayerLoginStore } from '../../store/newPlayerLoginStore';
 
 export const StaggeredMenu = ({
   position = 'right',
@@ -47,6 +49,7 @@ export const StaggeredMenu = ({
   
   const friendCode = useTradeStore((s) => s.friendCode);
   const fetchFriendCode = useTradeStore((s) => s.fetchFriendCode);
+  const isNewPlayerEligible = useNewPlayerLoginStore((s) => s.isNewPlayerEligible);
 
   useEffect(() => {
     if (user) {
@@ -477,11 +480,40 @@ export const StaggeredMenu = ({
                   )}
                   
                   <button 
+                    onClick={() => {
+                      setProfileOpen(false);
+                      closeMenu(); // Use closeMenu function defined in component
+                      useDailyLoginStore.getState().setIsOpen(true);
+                    }}
+                    className="sm-profile-action-btn sm-profile-btn-outline"
+                    style={{ marginTop: '8px', color: '#d7b73b', borderColor: 'rgba(215, 183, 59, 0.4)' }}
+                    type="button"
+                  >
+                    📅 ABSENSI 30 HARI
+                  </button>
+
+                  {isNewPlayerEligible && (
+                    <button 
+                      onClick={() => {
+                        setProfileOpen(false);
+                        closeMenu(); // Use closeMenu function defined in component
+                        useNewPlayerLoginStore.getState().setIsOpen(true);
+                      }}
+                      className="sm-profile-action-btn sm-profile-btn-outline"
+                      style={{ marginTop: '8px', color: '#fe2f2f', borderColor: 'rgba(254, 47, 47, 0.4)' }}
+                      type="button"
+                    >
+                      🎁 ABSENSI NEWBIE
+                    </button>
+                  )}
+                  
+                  <button 
                     onClick={async () => {
                       setProfileOpen(false);
                       await logout();
                     }}
                     className="sm-profile-action-btn sm-profile-btn-danger"
+                    style={{ marginTop: '12px' }}
                     type="button"
                   >
                     KELUAR AKUN

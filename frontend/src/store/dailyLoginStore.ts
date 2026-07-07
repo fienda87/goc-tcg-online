@@ -9,6 +9,8 @@ interface DailyLoginState {
   loading: boolean;
   error: string | null;
   claimableToday: boolean;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
   fetchStreak: () => Promise<void>;
   claimDailyReward: (cardId?: string) => Promise<any>;
 }
@@ -19,6 +21,9 @@ export const useDailyLoginStore = create<DailyLoginState>((set, get) => ({
   loading: false,
   error: null,
   claimableToday: false,
+  isOpen: false,
+
+  setIsOpen: (isOpen) => set({ isOpen }),
 
   fetchStreak: async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -44,10 +49,12 @@ export const useDailyLoginStore = create<DailyLoginState>((set, get) => ({
           loginStreakDay: data.login_streak_day ?? 0,
           lastLoginClaim: data.last_login_claim,
           claimableToday: claimable,
+          isOpen: claimable, // open automatically if claimable
           loading: false
         });
       }
     } catch (err: any) {
+      console.error('Error fetching daily login streak:', err);
       set({ error: err.message || 'Gagal memuat streak', loading: false });
     }
   },
@@ -82,6 +89,7 @@ export const useDailyLoginStore = create<DailyLoginState>((set, get) => ({
       set({ loading: false });
       return { success: false };
     } catch (err: any) {
+      console.error('Error claiming daily reward:', err);
       set({ error: err.message || 'Gagal klaim hadiah harian', loading: false });
       throw err;
     }

@@ -13,10 +13,11 @@ export const DailyLoginModal: React.FC = () => {
     claimableToday,
     fetchStreak,
     claimDailyReward,
-    loading
+    loading,
+    isOpen,
+    setIsOpen
   } = useDailyLoginStore();
 
-  const [isOpen, setIsOpen] = useState(false);
   const [showLegendaryPicker, setShowLegendaryPicker] = useState(false);
   const [selectedLegendaryId, setSelectedLegendaryId] = useState<string | null>(null);
   const [successReward, setSuccessReward] = useState<any | null>(null);

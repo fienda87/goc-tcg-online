@@ -10,6 +10,8 @@ interface NewPlayerLoginState {
   loading: boolean;
   error: string | null;
   claimableToday: boolean;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
   fetchNewPlayerStreak: () => Promise<void>;
   claimNewPlayerReward: (cardId?: string) => Promise<any>;
 }
@@ -21,6 +23,9 @@ export const useNewPlayerLoginStore = create<NewPlayerLoginState>((set, get) => 
   loading: false,
   error: null,
   claimableToday: false,
+  isOpen: false,
+
+  setIsOpen: (isOpen) => set({ isOpen }),
 
   fetchNewPlayerStreak: async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -48,10 +53,20 @@ export const useNewPlayerLoginStore = create<NewPlayerLoginState>((set, get) => 
           lastNewPlayerClaim: data.last_new_player_claim,
           isNewPlayerEligible: isEligible,
           claimableToday: claimable,
+          isOpen: claimable, // open automatically if claimable
           loading: false
         });
       }
     } catch (err: any) {
+      console.error(
+        '=== [GOC TCG ERROR] GAGAL MEMUAT ABSENSI PEMAIN BARU ===\n',
+        'Kemungkinan besar kolom database belum dibuat. Silakan buka SQL Editor Supabase Anda dan jalankan query berikut:\n\n',
+        'ALTER TABLE profiles \n',
+        'ADD COLUMN IF NOT EXISTS new_player_streak_day INT DEFAULT 0,\n',
+        'ADD COLUMN IF NOT EXISTS last_new_player_claim DATE DEFAULT NULL,\n',
+        'ADD COLUMN IF NOT EXISTS is_new_player_eligible BOOLEAN DEFAULT TRUE;\n\n',
+        'Detail Error:', err
+      );
       set({ error: err.message || 'Gagal memuat login streak pemain baru', loading: false });
     }
   },
@@ -181,6 +196,7 @@ export const useNewPlayerLoginStore = create<NewPlayerLoginState>((set, get) => 
         rewardCardId
       };
     } catch (err: any) {
+      console.error('Error claiming new player reward:', err);
       set({ error: err.message || 'Gagal mengklaim hadiah login pemain baru', loading: false });
       throw err;
     }
