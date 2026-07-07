@@ -25,6 +25,7 @@ export interface CardData {
   image_url: string;
   imageUrl?: string;
   volume?: number;
+  card_id?: string;
   // ── Battle fields ──
   stage?: 0 | 1 | 2;
   skills?: BattleSkill[];
@@ -288,7 +289,7 @@ export function generatePull(volume: number = 1, isPityActive: boolean = false):
     const finalConfig = (isPityActive && (index === 2 || index === 3 || index === 4)) ? PITY_CONFIG : config;
     const rarity = pickRarity(finalConfig);
     const card = pickRandomCardFromPool(rarity, volume);
-    return { ...card, id: `${Date.now()}-${Math.random()}` };
+    return { ...card, id: `${Date.now()}-${Math.random()}`, card_id: card.id };
   });
 }
 

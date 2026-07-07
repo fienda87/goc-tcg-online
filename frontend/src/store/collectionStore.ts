@@ -133,7 +133,7 @@ export const useCollectionStore = create<CollectionState>()(
         try {
           const insertPayload = newCards.map((card) => ({
             user_id: user.id,
-            card_id: card.id,
+            card_id: card.card_id || card.id,
             volume: card.volume || 1,
           }));
 
