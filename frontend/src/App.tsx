@@ -52,8 +52,8 @@ function App() {
     // Run refill check on mount
     checkRefill();
 
-    // Check periodically in background (every 5 seconds)
-    const interval = setInterval(checkRefill, 5000);
+    // Check periodically in background (every 30 seconds)
+    const interval = setInterval(checkRefill, 30000);
 
     // Run check on focus/visibility change (tab reactivation)
     const handleReactivation = () => checkRefill();

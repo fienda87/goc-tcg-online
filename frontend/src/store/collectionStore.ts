@@ -144,13 +144,8 @@ export const useCollectionStore = create<CollectionState>()(
 
           if (insertError) throw insertError;
 
-          // Update profile points
-          const newIp = currentIp + pointsReward;
-          const { error: profileError } = await supabase
-            .from('profiles')
-            .update({ ip_points: newIp })
-            .eq('id', user.id);
-
+          // Update profile points atomically using RPC
+          const { data: newDbIp, error: profileError } = await supabase.rpc('adjust_ip_points', { p_amount: pointsReward });
           if (profileError) throw profileError;
 
           // Map inserted cards to state
@@ -166,7 +161,7 @@ export const useCollectionStore = create<CollectionState>()(
 
           set({
             cards: [...currentCards, ...mappedInserted],
-            ipPoints: newIp
+            ipPoints: newDbIp
           });
         } catch (err) {
           console.error('Error saving pulled cards to Supabase:', err);
@@ -186,7 +181,8 @@ export const useCollectionStore = create<CollectionState>()(
           // Guest mode
           const newCardInstance = { 
             ...card, 
-            id: `shop-${Date.now()}-${Math.random()}` 
+            id: `shop-${Date.now()}-${Math.random()}`,
+            card_id: card.card_id || card.id
           };
           set({
             cards: [...currentCards, newCardInstance],
@@ -269,20 +265,16 @@ export const useCollectionStore = create<CollectionState>()(
             if (deleteError) throw deleteError;
           }
 
-          // Update profile points
-          const newIp = currentIp + (countToExtract * pointsPerCard);
-          const { error: profileError } = await supabase
-            .from('profiles')
-            .update({ ip_points: newIp })
-            .eq('id', user.id);
-
+          // Update profile points atomically using RPC
+          const reward = countToExtract * pointsPerCard;
+          const { data: newDbIp, error: profileError } = await supabase.rpc('adjust_ip_points', { p_amount: reward });
           if (profileError) throw profileError;
 
           // Filter local state
           const remainingCards = currentCards.filter(c => !targetIds.includes(c.id));
           set({
             cards: remainingCards,
-            ipPoints: newIp
+            ipPoints: newDbIp
           });
         } catch (err) {
           console.error('Error recycling card in Supabase:', err);
@@ -331,17 +323,13 @@ export const useCollectionStore = create<CollectionState>()(
 
           if (deleteError) throw deleteError;
 
-          // Update profile points
-          const { error: profileError } = await supabase
-            .from('profiles')
-            .update({ ip_points: newIp })
-            .eq('id', user.id);
-
+          // Update profile points atomically using RPC
+          const { data: newDbIp, error: profileError } = await supabase.rpc('adjust_ip_points', { p_amount: totalExtractablePoints });
           if (profileError) throw profileError;
 
           set({
             cards: retainedCards,
-            ipPoints: newIp
+            ipPoints: newDbIp
           });
         } catch (err) {
           console.error('Error extracting all duplicates in Supabase:', err);
@@ -383,7 +371,7 @@ export const useCollectionStore = create<CollectionState>()(
             if (currentCards.length > 0) {
               const insertPayload = currentCards.map((card) => ({
                 user_id: user.id,
-                card_id: card.id || card.card_id,
+                card_id: card.card_id || card.id,
                 volume: card.volume || 1,
               }));
 

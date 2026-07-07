@@ -377,7 +377,14 @@ export const Gacha: React.FC = () => {
       });
     }, 150);
 
-    if (isPityActive) {
+    const hasPulledPremium = cards.some(c => 
+      c.rarity === 'Super Rare' || 
+      c.rarity === 'Ultra Rare' || 
+      c.rarity === 'Exclusive Legendary' || 
+      c.rarity === 'Special Mythical'
+    );
+
+    if (isPityActive || hasPulledPremium) {
       resetPity(volume);
     } else {
       incrementPity(volume);
